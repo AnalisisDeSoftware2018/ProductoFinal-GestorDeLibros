@@ -6,8 +6,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+
+import javax.swing.JOptionPane;
 
 import model.Libro;
 
@@ -19,46 +22,65 @@ public class LibroDao {
 	private LibroDao() {
 	}
 
-	public static LibroDao getSingletonInstance() {
-		if (instancia == null) {
-			return new LibroDao();
-		}
-		return instancia;
+	public static LibroDao obtenerSingletonInstance() {
+		return instancia != null ? instancia : new LibroDao();
 	}
 
-	public Libro getLibro(String isbn) {
-		for(Libro libro: getLibros()) {
-			if(libro.getIsbn().equals(isbn)) {
+	public Libro obtenerLibro(String isbn) {
+		for(Libro libro: obtenerLibros()) {
+			if(libro.obtenerISBN().equals(isbn)) {
 				return libro;
 			}
 		}
 		return null;
 	}
 
-	public List<Libro> getLibros() {
+	public List<Libro> obtenerLibros() {
 		List<Libro> libros = new ArrayList<>();
-		Scanner sc;
 		try {
-			sc = new Scanner(new File("Libros.txt"));
+			Scanner sc = new Scanner(new File("Libros.txt"));
 			while (sc.hasNextLine()) {
 				String[] atributos = sc.nextLine().split(SEPARADOR);
 				libros.add(new Libro(atributos[0], atributos[1], atributos[2], atributos[3],
 						Integer.parseInt(atributos[4]), Integer.parseInt(atributos[5])));
 			}
 			sc.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+		} catch (FileNotFoundException evento) {
+			JOptionPane.showMessageDialog(null, evento.getMessage());
 		}
 
 		return libros;
 	}
 
-	public void save(Libro libro) {
-		List<Libro> libros = getLibros();
+
+	public void guardar(Libro libro) {
+		// TODO Auto-generated method stub
+	}
+	
+	public List<Libro> ordenar() {
+		List<Libro> libros = obtenerLibros();
+		libros.sort(new Libro());
+		FileWriter fw = null;
+		PrintWriter pw = null;
+		try {
+			fw = new FileWriter("Libros.txt");
+			pw = new PrintWriter(fw);
+			for (Libro libro : libros) {
+				pw.println(libro.obtenerISBN() + SEPARADOR + libro.obtenerTitulo() + SEPARADOR + libro.obtenerAutor() + SEPARADOR
+						+ libro.obtenerEditorial() + SEPARADOR + libro.obtenerEdicion() + SEPARADOR
+						+ libro.obtenerAnioPublicacion());
+			}
+			fw.close();
+			pw.close();
+		} catch (IOException evento) {
+			JOptionPane.showMessageDialog(null, evento.getMessage());
+		}
+		
+		return libros;
 	}
 
-	public void delete(String isbn) {
-		List<Libro> libros = getLibros();
+	public void eliminar(String isbn) {
+		List<Libro> libros = obtenerLibros();
 		libros.remove(new Libro(isbn,null,null,null,null,null));
 		FileWriter fw = null;
 		PrintWriter pw = null;
@@ -66,31 +88,32 @@ public class LibroDao {
 			fw = new FileWriter("Libros.txt");
 			pw = new PrintWriter(fw);
 			for (Libro libro : libros) {
-				pw.println(libro.getIsbn() + SEPARADOR + libro.getTitulo() + SEPARADOR + libro.getAutor() + SEPARADOR
-						+ libro.getEditorial() + SEPARADOR + libro.getEdicion() + SEPARADOR
-						+ libro.getAnioPublicacion());
+				pw.println(libro.obtenerISBN() + SEPARADOR + libro.obtenerTitulo() + SEPARADOR + libro.obtenerAutor() + SEPARADOR
+						+ libro.obtenerEditorial() + SEPARADOR + libro.obtenerEdicion() + SEPARADOR
+						+ libro.obtenerAnioPublicacion());
 			}
 			fw.close();
 			pw.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (IOException evento) {
+			JOptionPane.showMessageDialog(null, evento.getMessage());
 		}
 	}
 	
-//	1&&Historia I&&Elias Garcia&&Puerto de palos&&2018&&1994
-//	2&&Historia II&&Elias Garcia&&Puerto de palos&&2018&&1820
-//	3&&Historia III&&Elias Garcia&&Puerto de palos&&2018&&2016
-//	4&&Matematica&&Elias Garcia&&Puerto de palos&&2018&&2015
-//	5&&Lengua&&Elias Garcia&&Puerto de palos&&2018&&1977
-//	7&&Salud&&Elias Garcia&&Puerto de palos&&2018&&2012
-//	8&&Análisis Sistemas&&Elias Garcia&&Puerto de palos&&2018&&2011
-//	9&&Arquitectura&&Elias Garcia&&Puerto de palos&&2018&&2018
-//	10&&Programacion&&Elias Garcia&&Puerto de palos&&2018&&1745
-//	11&&algebra&&Elias Garcia&&Puerto de palos&&2018&&1810
-//	12&&Hibernate&&Elias Garcia&&Puerto de palos&&2018&&2015
-//	13&&Spring&&Elias Garcia&&Puerto de palos&&2018&&2014
-//	14&&Vaadin 7&&Elias Garcia&&Puerto de palos&&2018&&2013
-//	15&&Maria DB&&Elias Garcia&&Puerto de palos&&2018&&2012
-//	16&&Informix&&Elias Garcia&&Puerto de palos&&2018&&2011
+	public static void main(String[] args) {
+		LibroDao dao = new LibroDao();
+		
+		List<Libro> lista;
+		
+		lista = dao.obtenerLibros();
+		
+		for (Libro libro : lista) {
+			System.out.println(Arrays.toString(libro.obtenerFormatoFila()));
+		}
+		
+		lista = dao.ordenar();
+		
+		for (Libro libro : lista) {
+			System.out.println(Arrays.toString(libro.obtenerFormatoFila()));
+		}
+	}
 }
