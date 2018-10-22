@@ -27,7 +27,12 @@ public class LibroDao {
 	}
 
 	public Libro getLibro(String isbn) {
-		return new Libro("1", "Historia I", "Elias Garcia", "Puerto de palos", 2018, 2018);
+		for(Libro libro: getLibros()) {
+			if(libro.getIsbn().equals(isbn)) {
+				return libro;
+			}
+		}
+		return null;
 	}
 
 	public List<Libro> getLibros() {
@@ -49,8 +54,7 @@ public class LibroDao {
 	}
 
 	public void save(Libro libro) {
-		// TODO Auto-generated method stub
-
+		List<Libro> libros = getLibros();
 	}
 
 	public void delete(String isbn) {
