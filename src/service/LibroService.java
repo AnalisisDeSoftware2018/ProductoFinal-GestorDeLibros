@@ -12,35 +12,41 @@ public class LibroService {
 	private static LibroService instancia;
 
 	private LibroService() {
-		libroDao = LibroDao.getSingletonInstance();
+		libroDao = LibroDao.obtenerSingletonInstance();
 	}
 
-	public static LibroService getSingletonInstance() {
-		if (instancia == null) {
-			return new LibroService();
-		}
-		return instancia;
+	public static LibroService obtenerSingletonInstance() {
+		// if (instancia == null) {
+		// return new LibroService();
+		// }
+		// return instancia;
+
+		return instancia != null ? instancia : new LibroService();
 	}
 
-	public Libro getLibro(String isbn) {
-		return libroDao.getLibro(isbn);
+	public Libro obtenerLibro(String isbn) {
+		return libroDao.obtenerLibro(isbn);
 	}
 
-	public List<Libro> getLibros() {
-		return libroDao.getLibros();
+	public List<Libro> obtenerLibros() {
+		return libroDao.obtenerLibros();
 	}
 
-	public void save(Libro libro) {
-		libroDao.save(libro);
+	public void guardar(Libro libro) {
+		libroDao.guardar(libro);
+	}
+	
+	public List<Libro> ordenar() {
+		return libroDao.ordenar();
 	}
 
-	public void delete(String isbn) {
-		libroDao.delete(isbn);
+	public void eliminar(String isbn) {
+		libroDao.eliminar(isbn);
 	}
 
-	public List<Libro> getLibroByFiltro(String isbn, String titulo, String autor, String editorial, String edicion,
+	public List<Libro> obtenerLibroConFiltro(String isbn, String titulo, String autor, String editorial, String edicion,
 			String anioPublicacion) {
-		List<Libro> libros = this.getLibros(), result = new ArrayList<>();
+		List<Libro> libros = this.obtenerLibros(), result = new ArrayList<>();
 		for (Libro libro : libros) {
 			if (libroEsValido(libro, isbn, titulo, autor, editorial, edicion, anioPublicacion)) {
 				result.add(libro);
@@ -52,22 +58,22 @@ public class LibroService {
 	private boolean libroEsValido(Libro libro, String isbn, String titulo, String autor, String editorial,
 			String edicion, String anioPublicacion) {
 
-		if (atributoEsIgualAValor(libro.getIsbn(), isbn)) {
+		if (atributoEsIgualAValor(libro.obtenerISBN(), isbn)) {
 			return false;
 		}
-		if (atributoContieneValor(libro.getTitulo(), titulo)) {
+		if (atributoContieneValor(libro.obtenerTitulo(), titulo)) {
 			return false;
 		}
-		if (atributoContieneValor(libro.getAutor(), autor)) {
+		if (atributoContieneValor(libro.obtenerAutor(), autor)) {
 			return false;
 		}
-		if (atributoContieneValor(libro.getEditorial(), editorial)) {
+		if (atributoContieneValor(libro.obtenerEditorial(), editorial)) {
 			return false;
 		}
-		if (atributoComienzaConValor(libro.getEdicion(), edicion)) {
+		if (atributoComienzaConValor(libro.obtenerEdicion(), edicion)) {
 			return false;
 		}
-		if (atributoComienzaConValor(libro.getAnioPublicacion(), anioPublicacion)) {
+		if (atributoComienzaConValor(libro.obtenerAnioPublicacion(), anioPublicacion)) {
 			return false;
 		}
 		return true;

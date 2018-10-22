@@ -1,6 +1,8 @@
 package model;
 
-public class Libro implements Comparable<Libro> {
+import java.util.Comparator;
+
+public class Libro implements Comparable<Libro>, Comparator<Libro> {
 
 	private String isbn;
 	private String titulo;
@@ -21,61 +23,67 @@ public class Libro implements Comparable<Libro> {
 		this.anioPublicacion = anioPublicacion;
 	}
 
-	public String getIsbn() {
-		return isbn;
-	}
-
-	public void setIsbn(String isbn) {
+	public void especificarISBN(String isbn) {
 		this.isbn = isbn;
 	}
-
-	public String getTitulo() {
+	
+	public void especificarTitulo(String titulo) {
+		this.titulo = titulo;
+	}
+	
+	public void especificarAutor(String autor) {
+		this.autor = autor;
+	}
+	
+	public void especificarEditorial(String editorial) {
+		this.editorial = editorial;
+	}
+	
+	public void especificarEdicion(Integer edicion) {
+		this.edicion = edicion;
+	}
+	
+	public void especificarAnioPublicacion(Integer anioPublicacion) {
+		this.anioPublicacion = anioPublicacion;
+	}
+	
+	public String obtenerISBN() {
+		return isbn;
+	}
+	
+	public String obtenerTitulo() {
 		return titulo;
 	}
 
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
-	}
-
-	public String getAutor() {
+	public String obtenerAutor() {
 		return autor;
 	}
-
-	public void setAutor(String autor) {
-		this.autor = autor;
-	}
-
-	public String getEditorial() {
+	
+	public String obtenerEditorial() {
 		return editorial;
 	}
-
-	public void setEditorial(String editorial) {
-		this.editorial = editorial;
-	}
-
-	public Integer getEdicion() {
+	
+	public Integer obtenerEdicion() {
 		return edicion;
 	}
-
-	public void setEdicion(Integer edicion) {
-		this.edicion = edicion;
-	}
-
-	public Integer getAnioPublicacion() {
+	
+	public Integer obtenerAnioPublicacion() {
 		return anioPublicacion;
 	}
 
-	public void setAnioPublicacion(Integer anioPublicacion) {
-		this.anioPublicacion = anioPublicacion;
-	}
-
 	@Override
-	public int compareTo(Libro l) {
-		return l.isbn.compareTo(isbn);
+	public int compareTo(Libro otro) {
+		int resta = Long.valueOf(this.isbn).intValue() - Long.valueOf(otro.isbn).intValue();
+		return resta;
+	}
+	
+	@Override
+	public int compare(Libro uno, Libro dos) {
+		return uno.compareTo(dos);
 	}
 
-	public String[] getRowFormat() {
-		String[] cadena = {getIsbn(),getTitulo(),getAutor(),getEditorial(),String.valueOf(getEdicion()),String.valueOf(getAnioPublicacion())};
+	public String[] obtenerFormatoFila() {
+		String[] cadena = {obtenerISBN(),obtenerTitulo(),obtenerAutor(),obtenerEditorial(),String.valueOf(obtenerEdicion()),String.valueOf(obtenerAnioPublicacion())};
 		return cadena;
 	}
 
@@ -89,19 +97,21 @@ public class Libro implements Comparable<Libro> {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) return true;
+		
+		if (obj == null) return false;
+		
+		if (getClass() != obj.getClass()) return false;
+		
 		Libro other = (Libro) obj;
+		
 		if (isbn == null) {
-			if (other.isbn != null)
-				return false;
-		} else if (!isbn.equals(other.isbn))
-			return false;
+			if (other.isbn != null) return false;
+		} else if (!isbn.equals(other.isbn)) return false;
+		
 		return true;
 	}
+
+	
 	
 }
