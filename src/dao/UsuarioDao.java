@@ -98,10 +98,5 @@ public class UsuarioDao {
 		
 		return false;
 	}
-	
-	
-	public static void main(String[] args) {
-
-	}
 
 }

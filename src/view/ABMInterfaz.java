@@ -3,7 +3,6 @@ package view;
 import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -36,16 +35,6 @@ public class ABMInterfaz extends JFrame {
 	private JButton btnBuscar;
 	private JButton btnLimpiar;
 	private JButton btnOrdenar;
-
-	public static void main(String[] args) {
-		try {
-			ABMInterfaz dialog = new ABMInterfaz();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	public ABMInterfaz() {
 		libroService = LibroService.obtenerSingletonInstance();

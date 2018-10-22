@@ -1,7 +1,5 @@
 package view;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -22,22 +20,6 @@ public class RegistroInterfaz {
 	private JTextField userField;
 	private JPasswordField passwordField; 
 	private UsuarioDao usuarioDao;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					RegistroInterfaz window = new RegistroInterfaz();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the application.
