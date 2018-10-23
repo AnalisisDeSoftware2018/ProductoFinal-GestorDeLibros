@@ -16,7 +16,6 @@ import javax.swing.table.TableModel;
 import model.Libro;
 import service.LibroService;
 import java.awt.event.ActionListener;
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 
 public class ABMInterfaz extends JFrame {
@@ -132,6 +131,11 @@ public class ABMInterfaz extends JFrame {
 		getContentPane().add(btnEliminar);
 
 		btnModificar = new JButton("Modificar");
+		btnModificar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				modificar();
+			}
+		});
 		btnModificar.setBounds(660, 444, 100, 25);
 		getContentPane().add(btnModificar);
 
@@ -204,5 +208,23 @@ public class ABMInterfaz extends JFrame {
 		txfEditorial.setText("");
 		txfEdicion.setText("");
 		txfAnioPublicion.setText("");
+	}
+	
+	private void modificar() {
+		if(tabla.getSelectedRow() == -1)
+			JOptionPane.showMessageDialog(null, "Debe seleccionar un libro.");
+		else
+			try {
+				int row = tabla.getSelectedRow();
+				Libro aModificar = new Libro((String) tabla.getValueAt(row, 0), (String) tabla.getValueAt(row, 1), 
+												(String) tabla.getValueAt(row, 2), (String) tabla.getValueAt(row, 3), 
+												Integer.parseInt((String) tabla.getValueAt(row, 4)),
+												Integer.parseInt((String) tabla.getValueAt(row, 5)));
+				
+				new ModificarLibroInterfaz(aModificar);
+				buscarLibros();
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, "No se pudo eliminar correctamente.");
+			}
 	}
 }

@@ -1,7 +1,5 @@
 package view;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -15,7 +13,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class NuevoLibroInterfaz {
+public class ModificarLibroInterfaz {
 
 	private JFrame frame;
 	private JTextField txtIsbn;
@@ -25,27 +23,20 @@ public class NuevoLibroInterfaz {
 	private JTextField txtEdicin;
 	private JTextField txtAoPublicacin;
 	private LibroService libroService;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					NuevoLibroInterfaz window = new NuevoLibroInterfaz();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private Libro libro;
+	private String viejoIsbn;
 
 	/**
 	 * Create the application.
 	 */
-	public NuevoLibroInterfaz() {
+	public ModificarLibroInterfaz() {
+		libroService = LibroService.obtenerSingletonInstance();
+		initialize();
+	}
+	
+	public ModificarLibroInterfaz(Libro libro) {
+		this.libro = libro;
+		this.viejoIsbn = libro.obtenerISBN();
 		libroService = LibroService.obtenerSingletonInstance();
 		initialize();
 	}
@@ -54,14 +45,14 @@ public class NuevoLibroInterfaz {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame("Registrar nuevo libro");
+		frame = new JFrame("Modificar libro");
 		frame.setResizable(false);
 		frame.setBounds(100, 100, 358, 282);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
-		JLabel lblCompleteLosCampos = new JLabel("Complete los campos:");
+		JLabel lblCompleteLosCampos = new JLabel("Modifique los campos necesarios:");
 		lblCompleteLosCampos.setFont(lblCompleteLosCampos.getFont().deriveFont(lblCompleteLosCampos.getFont().getStyle() | Font.BOLD));
 		lblCompleteLosCampos.setBounds(10, 11, 209, 14);
 		frame.getContentPane().add(lblCompleteLosCampos);
@@ -69,6 +60,7 @@ public class NuevoLibroInterfaz {
 		txtIsbn = new JTextField();
 		txtIsbn.setToolTipText("");
 		txtIsbn.setBounds(10, 61, 113, 20);
+		txtIsbn.setText(libro.obtenerISBN());
 		frame.getContentPane().add(txtIsbn);
 		txtIsbn.setColumns(10);
 		
@@ -82,6 +74,7 @@ public class NuevoLibroInterfaz {
 		
 		txtTitulo = new JTextField();
 		txtTitulo.setBounds(10, 117, 113, 20);
+		txtTitulo.setText(libro.obtenerTitulo());
 		frame.getContentPane().add(txtTitulo);
 		txtTitulo.setColumns(10);
 		
@@ -91,6 +84,7 @@ public class NuevoLibroInterfaz {
 		
 		txtAutor = new JTextField();
 		txtAutor.setBounds(10, 173, 113, 20);
+		txtAutor.setText(libro.obtenerAutor());
 		frame.getContentPane().add(txtAutor);
 		txtAutor.setColumns(10);
 		
@@ -100,6 +94,7 @@ public class NuevoLibroInterfaz {
 		
 		txtEditorial = new JTextField();
 		txtEditorial.setBounds(217, 61, 113, 20);
+		txtEditorial.setText(libro.obtenerEditorial());
 		frame.getContentPane().add(txtEditorial);
 		txtEditorial.setColumns(10);
 		
@@ -109,6 +104,7 @@ public class NuevoLibroInterfaz {
 		
 		txtEdicin = new JTextField();
 		txtEdicin.setBounds(217, 117, 113, 20);
+		txtEdicin.setText(libro.obtenerEdicion().toString());
 		frame.getContentPane().add(txtEdicin);
 		txtEdicin.setColumns(10);
 		
@@ -118,12 +114,28 @@ public class NuevoLibroInterfaz {
 		
 		txtAoPublicacin = new JTextField();
 		txtAoPublicacin.setBounds(217, 173, 113, 20);
+		txtAoPublicacin.setText(libro.obtenerAnioPublicacion().toString());
 		frame.getContentPane().add(txtAoPublicacin);
 		txtAoPublicacin.setColumns(10);
 		
 		JButton btnAceptar = new JButton("Aceptar");
 		btnAceptar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {			
+				/* Para modificar el libro lo que tengo que hacer es borrar el registro e insertarlo de nuevo modificado,
+				 * ya que el formato txt no me deja modificar renglones.
+				 * Lo que hago es tomar el objeto libro que viene desde el constructor, y de él saco los datos para un nuevo objeto
+				 * 'nuevo' (clase Libro). De paso, lleno los campos con los datos viejos para hacer más rápido el proceso.
+				 * 
+				 * Necesito validar el tema del ISBN:
+				 * - Si el ISBN nuevo (del nuevo objeto "modificado") es igual al viejo, estoy modificando el mismo libro, por lo tanto
+				 *   no tengo problema de duplicados.
+				 * 
+				 * - Si el ISBN nuevo es distinto al viejo, debo chequear que no esté pisando otro libro ya registrado (recuerden que yo
+				 *   BORRO el registro, estaría borrando data que no debería en ese caso).
+				 *   En este caso, pruebo insertar de una en el txt. Si pude insertar bien, significa que no es duplicado y uso un ISBN libre,
+				 *   entonces borro el registro anterior tranquilo.
+				 *   Si no pude insertar, es porque el ISBN ya existía y no es del mismo libro, aborto la inserción y aviso por pantalla.
+				 */
 				
 				if(txtIsbn.getText().isEmpty() || txtAutor.getText().isEmpty() || txtTitulo.getText().isEmpty()
 						|| txtAoPublicacin.getText().isEmpty() || txtEditorial.getText().isEmpty() || txtEdicin.getText().isEmpty()) {
@@ -131,11 +143,22 @@ public class NuevoLibroInterfaz {
 				} else {
 					Libro nuevo = new Libro(txtIsbn.getText(), txtTitulo.getText(), txtAutor.getText(), txtEditorial.getText(), Integer.parseInt(txtEdicin.getText()), Integer.parseInt(txtAoPublicacin.getText()));
 					
-					if(libroService.guardar(nuevo) == true) {
-						JOptionPane.showMessageDialog(null, "Libro guardado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
-						frame.dispose();
-					} else {
-						JOptionPane.showMessageDialog(null, "No se pudo guardar el libro nuevo", "", JOptionPane.ERROR_MESSAGE);
+					if(viejoIsbn.equals(nuevo.obtenerISBN()) == true) {				//estoy modificando otro campo que no es el isbn, no hay problema de insercion
+						libroService.eliminar(nuevo.obtenerISBN());
+						if(libroService.guardar(nuevo) == true) {
+							JOptionPane.showMessageDialog(null, "Libro modificado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
+							frame.dispose();
+						} else {
+							JOptionPane.showMessageDialog(null, "No se pudo modificar el libro nuevo", "", JOptionPane.ERROR_MESSAGE);
+						}
+					} else {														//si modifique el isbn, puedo tener problema de duplicados con otros libros
+						if(libroService.guardar(nuevo) == true) {
+							libroService.eliminar(libro.obtenerISBN());
+							JOptionPane.showMessageDialog(null, "Libro modificado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
+							frame.dispose();
+						} else {
+							JOptionPane.showMessageDialog(null, "No se pudo modificar el libro nuevo", "", JOptionPane.ERROR_MESSAGE);
+						}
 					}
 				}
 			}
