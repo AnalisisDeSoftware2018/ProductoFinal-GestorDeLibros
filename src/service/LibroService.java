@@ -28,8 +28,8 @@ public class LibroService {
 		return libroDao.obtenerLibros();
 	}
 
-	public void guardar(Libro libro) {
-		libroDao.guardar(libro);
+	public boolean guardar(Libro libro) {
+		return libroDao.guardar(libro);
 	}
 	
 	public List<Libro> ordenar() {

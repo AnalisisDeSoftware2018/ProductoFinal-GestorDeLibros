@@ -15,6 +15,9 @@ import javax.swing.table.TableModel;
 
 import model.Libro;
 import service.LibroService;
+import java.awt.event.ActionListener;
+import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
 
 public class ABMInterfaz extends JFrame {
 
@@ -41,7 +44,7 @@ public class ABMInterfaz extends JFrame {
 		especificarComponents();
 		especificarListeners();
 	}
-
+	
 	private void especificarComponents() {
 		setTitle("Gestor de Libros");
 		setBounds(100, 100, 900, 506);
@@ -112,6 +115,11 @@ public class ABMInterfaz extends JFrame {
 		getContentPane().add(lblAoPublicacion);
 
 		btnNuevo = new JButton("Nuevo");
+		btnNuevo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new NuevoLibroInterfaz();
+			}
+		});
 		btnNuevo.setBounds(694, 34, 192, 25);
 		getContentPane().add(btnNuevo);
 		

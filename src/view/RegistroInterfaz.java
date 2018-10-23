@@ -81,9 +81,8 @@ public class RegistroInterfaz {
 		btnConfirmar.setBounds(74, 92, 103, 23);
 		frame.getContentPane().add(btnConfirmar);
 		
+		frame.setVisible(true);
+		
 	}
-	
-	public void visible(boolean valor) {
-		frame.setVisible(valor);
-	}
+
 }

@@ -108,7 +108,7 @@ public class LoginInterfaz {
 		JButton btnRegistro = new JButton("Registrarse");
 		btnRegistro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new RegistroInterfaz().visible(true);
+				new RegistroInterfaz();
 			}
 		});
 		btnRegistro.setBounds(272, 115, 126, 23);
