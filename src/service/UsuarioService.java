@@ -27,4 +27,7 @@ public class UsuarioService {
 		return usuarioDao.generarUsuario(user);
 	}
 	
+	public boolean loginValido(Usuario user) {
+		return usuarioDao.loginValido(user);
+	}
 }

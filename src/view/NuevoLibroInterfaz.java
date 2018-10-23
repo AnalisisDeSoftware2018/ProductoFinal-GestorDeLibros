@@ -55,6 +55,7 @@ public class NuevoLibroInterfaz {
 	 */
 	private void initialize() {
 		frame = new JFrame("Registrar nuevo libro");
+		frame.setResizable(false);
 		frame.setBounds(100, 100, 358, 282);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);

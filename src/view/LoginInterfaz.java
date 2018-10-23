@@ -7,8 +7,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
-import dao.UsuarioDao;
 import model.Usuario;
+import service.UsuarioService;
 
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -21,7 +21,7 @@ public class LoginInterfaz {
 	private JFrame frame; 
 	private JTextField userField;
 	private JPasswordField passwordField;
-	private UsuarioDao usuarioDao;
+	private UsuarioService usuarioService;
 
 	/**
 	 * Launch the application.
@@ -43,7 +43,7 @@ public class LoginInterfaz {
 	 * Create the application.
 	 */
 	public LoginInterfaz() {
-		usuarioDao = UsuarioDao.getSingletonInstance();
+		usuarioService = UsuarioService.getSingletonInstance();
 		initialize();
 	}
 
@@ -83,7 +83,7 @@ public class LoginInterfaz {
 				} else {
 					Usuario usuario = new Usuario(user, pass);
 					
-					if(usuarioDao.loginValido(usuario) == true) {
+					if(usuarioService.loginValido(usuario) == true) {
 						new ABMInterfaz().setVisible(true);
 						frame.dispose();
 					} else {

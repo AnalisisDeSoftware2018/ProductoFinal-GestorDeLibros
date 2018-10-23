@@ -5,8 +5,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import dao.UsuarioDao;
 import model.Usuario;
+import service.UsuarioService;
 
 import javax.swing.JButton;
 
@@ -19,13 +19,13 @@ public class RegistroInterfaz {
 	private JFrame frame;
 	private JTextField userField;
 	private JPasswordField passwordField; 
-	private UsuarioDao usuarioDao;
+	private UsuarioService usuarioService;
 
 	/**
 	 * Create the application.
 	 */
 	public RegistroInterfaz() {
-		usuarioDao = UsuarioDao.getSingletonInstance();
+		usuarioService = UsuarioService.getSingletonInstance();
 		initialize();
 	}
 
@@ -68,7 +68,7 @@ public class RegistroInterfaz {
 				} else {
 					Usuario usuario = new Usuario(userField.getText(), new String(passwordField.getPassword()));
 					
-					if(usuarioDao.generarUsuario(usuario) == false) {
+					if(usuarioService.registrarUsuario(usuario) == false) {
 						JOptionPane.showMessageDialog(null, "El usuario ya existe", "", JOptionPane.ERROR_MESSAGE);
 					} else {
 						JOptionPane.showMessageDialog(null, "Usuario registrado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
