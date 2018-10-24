@@ -16,10 +16,6 @@ public class LibroService {
 	}
 
 	public static LibroService obtenerSingletonInstance() {
-		// if (instancia == null) {
-		// return new LibroService();
-		// }
-		// return instancia;
 
 		return instancia != null ? instancia : new LibroService();
 	}
@@ -32,8 +28,8 @@ public class LibroService {
 		return libroDao.obtenerLibros();
 	}
 
-	public void guardar(Libro libro) {
-		libroDao.guardar(libro);
+	public boolean guardar(Libro libro) {
+		return libroDao.guardar(libro);
 	}
 	
 	public List<Libro> ordenar() {
