@@ -24,14 +24,10 @@ public class LibroService {
 		return libroDao.obtenerLibro(isbn);
 	}
 
-	public List<Libro> obtenerLibros() {
-		return libroDao.obtenerLibros();
-	}
-
 	public boolean guardar(Libro libro) {
 		return libroDao.guardar(libro);
 	}
-	
+
 	public List<Libro> ordenar() {
 		return libroDao.ordenar();
 	}
@@ -49,6 +45,10 @@ public class LibroService {
 			}
 		}
 		return result;
+	}
+
+	private List<Libro> obtenerLibros() {
+		return libroDao.obtenerLibros();
 	}
 
 	private boolean libroEsValido(Libro libro, String isbn, String titulo, String autor, String editorial,

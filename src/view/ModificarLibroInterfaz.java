@@ -10,10 +10,8 @@ import service.LibroService;
 
 import java.awt.Font;
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
-public class ModificarLibroInterfaz {
+class ModificarLibroInterfaz {
 
 	private JFrame frame;
 	private JTextField txtIsbn;
@@ -27,7 +25,7 @@ public class ModificarLibroInterfaz {
 	private String viejoIsbn;
 	private ABMInterfaz abmInterfaz;
 	
-	public ModificarLibroInterfaz(Libro libro,ABMInterfaz abmInterfaz) {
+	ModificarLibroInterfaz(Libro libro,ABMInterfaz abmInterfaz) {
 		this.abmInterfaz = abmInterfaz;
 		this.libro = libro;
 		this.viejoIsbn = libro.obtenerISBN();
@@ -113,48 +111,46 @@ public class ModificarLibroInterfaz {
 		txtAoPublicacin.setColumns(10);
 		
 		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {			
-				/* Para modificar el libro lo que tengo que hacer es borrar el registro e insertarlo de nuevo modificado,
-				 * ya que el formato txt no me deja modificar renglones.
-				 * Lo que hago es tomar el objeto libro que viene desde el constructor, y de él saco los datos para un nuevo objeto
-				 * 'nuevo' (clase Libro). De paso, lleno los campos con los datos viejos para hacer más rápido el proceso.
-				 * 
-				 * Necesito validar el tema del ISBN:
-				 * - Si el ISBN nuevo (del nuevo objeto "modificado") es igual al viejo, estoy modificando el mismo libro, por lo tanto
-				 *   no tengo problema de duplicados.
-				 * 
-				 * - Si el ISBN nuevo es distinto al viejo, debo chequear que no esté pisando otro libro ya registrado (recuerden que yo
-				 *   BORRO el registro, estaría borrando data que no debería en ese caso).
-				 *   En este caso, pruebo insertar de una en el txt. Si pude insertar bien, significa que no es duplicado y uso un ISBN libre,
-				 *   entonces borro el registro anterior tranquilo.
-				 *   Si no pude insertar, es porque el ISBN ya existía y no es del mismo libro, aborto la inserción y aviso por pantalla.
-				 */
-				
-				if(txtIsbn.getText().isEmpty() || txtAutor.getText().isEmpty() || txtTitulo.getText().isEmpty()
-						|| txtAoPublicacin.getText().isEmpty() || txtEditorial.getText().isEmpty() || txtEdicin.getText().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Complete los campos por favor", "", JOptionPane.ERROR_MESSAGE);
-				} else {
-					Libro nuevo = new Libro(txtIsbn.getText(), txtTitulo.getText(), txtAutor.getText(), txtEditorial.getText(), Integer.parseInt(txtEdicin.getText()), Integer.parseInt(txtAoPublicacin.getText()));
-					
-					if(viejoIsbn.equals(nuevo.obtenerISBN()) == true) {				//estoy modificando otro campo que no es el isbn, no hay problema de insercion
-						libroService.eliminar(nuevo.obtenerISBN());
-						if(libroService.guardar(nuevo) == true) {
-							abmInterfaz.buscarLibros();
-							JOptionPane.showMessageDialog(null, "Libro modificado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
-							frame.dispose();
-						} else {
-							JOptionPane.showMessageDialog(null, "No se pudo modificar el libro nuevo", "", JOptionPane.ERROR_MESSAGE);
-						}
-					} else {														//si modifique el isbn, puedo tener problema de duplicados con otros libros
-						if(libroService.guardar(nuevo) == true) {
-							libroService.eliminar(libro.obtenerISBN());
-							abmInterfaz.buscarLibros();
-							JOptionPane.showMessageDialog(null, "Libro modificado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
-							frame.dispose();
-						} else {
-							JOptionPane.showMessageDialog(null, "No se pudo modificar el libro nuevo", "", JOptionPane.ERROR_MESSAGE);
-						}
+		btnAceptar.addActionListener(arg0 -> {
+			/* Para modificar el libro lo que tengo que hacer es borrar el registro e insertarlo de nuevo modificado,
+			 * ya que el formato txt no me deja modificar renglones.
+			 * Lo que hago es tomar el objeto libro que viene desde el constructor, y de él saco los datos para un nuevo objeto
+			 * 'nuevo' (clase Libro). De paso, lleno los campos con los datos viejos para hacer más rápido el proceso.
+			 *
+			 * Necesito validar el tema del ISBN:
+			 * - Si el ISBN nuevo (del nuevo objeto "modificado") es igual al viejo, estoy modificando el mismo libro, por lo tanto
+			 *   no tengo problema de duplicados.
+			 *
+			 * - Si el ISBN nuevo es distinto al viejo, debo chequear que no esté pisando otro libro ya registrado (recuerden que yo
+			 *   BORRO el registro, estaría borrando data que no debería en ese caso).
+			 *   En este caso, pruebo insertar de una en el txt. Si pude insertar bien, significa que no es duplicado y uso un ISBN libre,
+			 *   entonces borro el registro anterior tranquilo.
+			 *   Si no pude insertar, es porque el ISBN ya existía y no es del mismo libro, aborto la inserción y aviso por pantalla.
+			 */
+
+			if(txtIsbn.getText().isEmpty() || txtAutor.getText().isEmpty() || txtTitulo.getText().isEmpty()
+					|| txtAoPublicacin.getText().isEmpty() || txtEditorial.getText().isEmpty() || txtEdicin.getText().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Complete los campos por favor", "", JOptionPane.ERROR_MESSAGE);
+			} else {
+				Libro nuevo = new Libro(txtIsbn.getText(), txtTitulo.getText(), txtAutor.getText(), txtEditorial.getText(), Integer.parseInt(txtEdicin.getText()), Integer.parseInt(txtAoPublicacin.getText()));
+
+				if(viejoIsbn.equals(nuevo.obtenerISBN())) {				//estoy modificando otro campo que no es el isbn, no hay problema de insercion
+					libroService.eliminar(nuevo.obtenerISBN());
+					if(libroService.guardar(nuevo)) {
+						abmInterfaz.buscarLibros();
+						JOptionPane.showMessageDialog(null, "Libro modificado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
+						frame.dispose();
+					} else {
+						JOptionPane.showMessageDialog(null, "No se pudo modificar el libro nuevo", "", JOptionPane.ERROR_MESSAGE);
+					}
+				} else {														//si modifique el isbn, puedo tener problema de duplicados con otros libros
+					if(libroService.guardar(nuevo)) {
+						libroService.eliminar(libro.obtenerISBN());
+						abmInterfaz.buscarLibros();
+						JOptionPane.showMessageDialog(null, "Libro modificado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
+						frame.dispose();
+					} else {
+						JOptionPane.showMessageDialog(null, "No se pudo modificar el libro nuevo", "", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
@@ -163,14 +159,10 @@ public class ModificarLibroInterfaz {
 		frame.getContentPane().add(btnAceptar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				frame.dispose();
-			}
-		});
+		btnCancelar.addActionListener(arg0 -> frame.dispose());
 		btnCancelar.setBounds(188, 210, 89, 23);
 		frame.getContentPane().add(btnCancelar);
-		
+
 		frame.setVisible(true);
 	}
 }

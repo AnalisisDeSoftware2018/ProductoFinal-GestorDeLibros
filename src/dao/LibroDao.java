@@ -53,7 +53,7 @@ public class LibroDao {
 		return libros;
 	}
 
-	public boolean libroValido(Libro libro) {					//verifica que el libro a agregar no tenga ISBN repetido
+	private boolean libroValido(Libro libro) {					//verifica que el libro a agregar no tenga ISBN repetido
 		List<Libro> libros = obtenerLibros();
 		
 		for(Libro l : libros) {
@@ -66,9 +66,9 @@ public class LibroDao {
 	}
 	
 	public boolean guardar(Libro libro) {
-		BufferedWriter out = null;
+		BufferedWriter out;
 		
-		if(libroValido(libro) == true) {
+		if(libroValido(libro)) {
 			try {
 				out = new BufferedWriter(new FileWriter("Libros.txt", true));
 				out.write(libro.obtenerISBN() + SEPARADOR + libro.obtenerTitulo() + SEPARADOR + libro.obtenerAutor() + SEPARADOR 
@@ -87,45 +87,35 @@ public class LibroDao {
 	public List<Libro> ordenar() {
 		List<Libro> libros = obtenerLibros();
 		libros.sort(new Libro());
-		FileWriter fw = null;
-		PrintWriter pw = null;
-		try {
-			fw = new FileWriter("Libros.txt");
-			pw = new PrintWriter(fw);
-			for (Libro libro : libros) {
-				pw.println(libro.obtenerISBN() + SEPARADOR + libro.obtenerTitulo() + SEPARADOR + libro.obtenerAutor() + SEPARADOR
-						+ libro.obtenerEditorial() + SEPARADOR + libro.obtenerEdicion() + SEPARADOR
-						+ libro.obtenerAnioPublicacion());
-			}
-			fw.close();
-			pw.close();
-		} catch (IOException evento) {
-			JOptionPane.showMessageDialog(null, evento.getMessage());
-		}
-		
-		return libros;
+        escribirTXT(libros);
+
+        return libros;
 	}
 
-	public void eliminar(String isbn) {
+    public void eliminar(String isbn) {
 		List<Libro> libros = obtenerLibros();
 		libros.remove(new Libro(isbn,null,null,null,null,null));
-		FileWriter fw = null;
-		PrintWriter pw = null;
-		try {
-			fw = new FileWriter("Libros.txt");
-			pw = new PrintWriter(fw);
-			for (Libro libro : libros) {
-				pw.println(libro.obtenerISBN() + SEPARADOR + libro.obtenerTitulo() + SEPARADOR + libro.obtenerAutor() + SEPARADOR
-						+ libro.obtenerEditorial() + SEPARADOR + libro.obtenerEdicion() + SEPARADOR
-						+ libro.obtenerAnioPublicacion());
-			}
-			fw.close();
-			pw.close();
-		} catch (IOException evento) {
-			JOptionPane.showMessageDialog(null, evento.getMessage());
-		}
-	}
-	
+        escribirTXT(libros);
+    }
+
+    private void escribirTXT(List<Libro> libros) {
+        FileWriter fw;
+        PrintWriter pw;
+        try {
+            fw = new FileWriter("Libros.txt");
+            pw = new PrintWriter(fw);
+            for (Libro libro : libros) {
+                pw.println(libro.obtenerISBN() + SEPARADOR + libro.obtenerTitulo() + SEPARADOR + libro.obtenerAutor() + SEPARADOR
+                        + libro.obtenerEditorial() + SEPARADOR + libro.obtenerEdicion() + SEPARADOR
+                        + libro.obtenerAnioPublicacion());
+            }
+            fw.close();
+            pw.close();
+        } catch (IOException evento) {
+            JOptionPane.showMessageDialog(null, evento.getMessage());
+        }
+    }
+
 	public static void main(String[] args) {
 		LibroDao dao = new LibroDao();
 		
