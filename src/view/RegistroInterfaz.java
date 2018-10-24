@@ -14,7 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
 
-public class RegistroInterfaz {
+class RegistroInterfaz {
 
 	private JFrame frame;
 	private JTextField userField;
@@ -24,7 +24,7 @@ public class RegistroInterfaz {
 	/**
 	 * Create the application.
 	 */
-	public RegistroInterfaz() {
+	RegistroInterfaz() {
 		usuarioService = UsuarioService.getSingletonInstance();
 		initialize();
 	}
@@ -68,7 +68,7 @@ public class RegistroInterfaz {
 				} else {
 					Usuario usuario = new Usuario(userField.getText(), new String(passwordField.getPassword()));
 					
-					if(usuarioService.registrarUsuario(usuario) == false) {
+					if(!usuarioService.registrarUsuario(usuario)) {
 						JOptionPane.showMessageDialog(null, "El usuario ya existe", "", JOptionPane.ERROR_MESSAGE);
 					} else {
 						JOptionPane.showMessageDialog(null, "Usuario registrado correctamente", "", JOptionPane.INFORMATION_MESSAGE);

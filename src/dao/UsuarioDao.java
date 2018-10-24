@@ -30,21 +30,11 @@ public class UsuarioDao {
 		
 		Usuario userIngresado = new Usuario(user.getUser(), BCrypt.hashpw(user.getPass(), BCrypt.gensalt(4)));
 		List<Usuario> usuarios = new ArrayList<>();
-		
-		Scanner sc;
-		try {
-			sc = new Scanner(new File("Usuarios.txt"));
-			while (sc.hasNextLine()) {
-				String[] atributos = sc.nextLine().split(SEPARADOR);
-				usuarios.add(new Usuario(atributos[0], atributos[1]));
-			}
-			sc.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		
+
+		cargarUsuarios(usuarios);
+
 		for(Usuario userSeguro : usuarios) {
-			if(userSeguro.equals(userIngresado) == true) {
+			if(userSeguro.equals(userIngresado)) {
 				return false;
 			}
 		}
@@ -55,7 +45,21 @@ public class UsuarioDao {
 	public boolean loginValido(Usuario user) {
 		
 		List<Usuario> usuarios = new ArrayList<>();
+
+		cargarUsuarios(usuarios);
+
+		for(Usuario userSeguro : usuarios) {
+			if(userSeguro.getUser().equals(user.getUser())) {
+				if(BCrypt.checkpw(user.getPass(), userSeguro.getPass())) {
+					return true;
+				}
+			}
+		}
 		
+		return false;
+	}
+
+	private void cargarUsuarios(List<Usuario> usuarios) {
 		Scanner sc;
 		try {
 			sc = new Scanner(new File("Usuarios.txt"));
@@ -67,24 +71,14 @@ public class UsuarioDao {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
-		for(Usuario userSeguro : usuarios) {
-			if(userSeguro.getUser().equals(user.getUser())) {
-				if(BCrypt.checkpw(user.getPass(), userSeguro.getPass()) == true) {
-					return true;
-				}
-			}
-		}
-		
-		return false;
 	}
-	
+
 	public boolean generarUsuario(Usuario user) {
 		
 		Usuario userIngresado = new Usuario(user.getUser(), BCrypt.hashpw(user.getPass(), BCrypt.gensalt(4)));
-		BufferedWriter out = null;
+		BufferedWriter out;
 		
-		if(usuarioValido(userIngresado) == true ) {
+		if(usuarioValido(userIngresado)) {
 			try {
 				out = new BufferedWriter(new FileWriter("Usuarios.txt", true));
 				out.write(userIngresado.getUser() + SEPARADOR + userIngresado.getPass() + '\n');

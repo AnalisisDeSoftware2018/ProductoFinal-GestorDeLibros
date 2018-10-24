@@ -16,7 +16,7 @@ import javax.swing.table.TableModel;
 import model.Libro;
 import service.LibroService;
 
-public class ABMInterfaz extends JFrame {
+class ABMInterfaz extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private LibroService libroService;
@@ -36,7 +36,7 @@ public class ABMInterfaz extends JFrame {
 	private JButton btnLimpiar;
 	private JButton btnOrdenar;
 
-	public ABMInterfaz() {
+	ABMInterfaz() {
 		libroService = LibroService.obtenerSingletonInstance();
 		especificarComponents();
 		especificarListeners();
@@ -136,7 +136,7 @@ public class ABMInterfaz extends JFrame {
 		getContentPane().add(btnLimpiar);
 	}
 
-	public void buscarLibros() {
+	void buscarLibros() {
 		String isbn = txfIsbn.getText();
 		String titulo = txfTitulo.getText();
 		String autor = txfAutor.getText();

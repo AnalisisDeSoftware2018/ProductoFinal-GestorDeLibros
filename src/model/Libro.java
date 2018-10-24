@@ -73,8 +73,7 @@ public class Libro implements Comparable<Libro>, Comparator<Libro> {
 
 	@Override
 	public int compareTo(Libro otro) {
-		int resta = Long.valueOf(this.isbn).intValue() - Long.valueOf(otro.isbn).intValue();
-		return resta;
+		return Long.valueOf(this.isbn).intValue() - Long.valueOf(otro.isbn).intValue();
 	}
 	
 	@Override
@@ -83,8 +82,7 @@ public class Libro implements Comparable<Libro>, Comparator<Libro> {
 	}
 
 	public String[] obtenerFormatoFila() {
-		String[] cadena = {obtenerISBN(),obtenerTitulo(),obtenerAutor(),obtenerEditorial(),String.valueOf(obtenerEdicion()),String.valueOf(obtenerAnioPublicacion())};
-		return cadena;
+		return new String[]{obtenerISBN(),obtenerTitulo(),obtenerAutor(),obtenerEditorial(),String.valueOf(obtenerEdicion()),String.valueOf(obtenerAnioPublicacion())};
 	}
 
 	@Override
@@ -106,9 +104,9 @@ public class Libro implements Comparable<Libro>, Comparator<Libro> {
 		Libro other = (Libro) obj;
 		
 		if (isbn == null) {
-			if (other.isbn != null) return false;
+			return other.isbn == null;
 		} else if (!isbn.equals(other.isbn)) return false;
-		
+
 		return true;
 	}
 
