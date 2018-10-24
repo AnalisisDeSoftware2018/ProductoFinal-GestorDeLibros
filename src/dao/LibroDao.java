@@ -71,8 +71,7 @@ public class LibroDao {
 		if(libroValido(libro)) {
 			try {
 				out = new BufferedWriter(new FileWriter("Libros.txt", true));
-				out.write(libro.obtenerISBN() + SEPARADOR + libro.obtenerTitulo() + SEPARADOR + libro.obtenerAutor() + SEPARADOR 
-							+ libro.obtenerEditorial() + SEPARADOR + libro.obtenerEdicion() + SEPARADOR + libro.obtenerAnioPublicacion() + '\n');
+				out.write(libro.enFormatoResgistro(SEPARADOR));
 				out.close();
 				
 				return true;
@@ -87,28 +86,29 @@ public class LibroDao {
 	public List<Libro> ordenar() {
 		List<Libro> libros = obtenerLibros();
 		libros.sort(new Libro());
-        escribirTXT(libros);
+        escribirArchivo(libros);
 
         return libros;
 	}
 
-    public void eliminar(String isbn) {
+    public List<Libro> eliminar(String isbn) {
 		List<Libro> libros = obtenerLibros();
 		libros.remove(new Libro(isbn,null,null,null,null,null));
-        escribirTXT(libros);
+        escribirArchivo(libros);
+        
+		return libros;
     }
 
-    private void escribirTXT(List<Libro> libros) {
+    private void escribirArchivo(List<Libro> libros) {
         FileWriter fw;
         PrintWriter pw;
         try {
             fw = new FileWriter("Libros.txt");
             pw = new PrintWriter(fw);
-            for (Libro libro : libros) {
-                pw.println(libro.obtenerISBN() + SEPARADOR + libro.obtenerTitulo() + SEPARADOR + libro.obtenerAutor() + SEPARADOR
-                        + libro.obtenerEditorial() + SEPARADOR + libro.obtenerEdicion() + SEPARADOR
-                        + libro.obtenerAnioPublicacion());
-            }
+            
+            for (Libro libro : libros)
+            	pw.print(libro.enFormatoResgistro(SEPARADOR));
+            
             fw.close();
             pw.close();
         } catch (IOException evento) {
@@ -123,14 +123,30 @@ public class LibroDao {
 		
 		lista = dao.obtenerLibros();
 		
-		for (Libro libro : lista) {
-			System.out.println(Arrays.toString(libro.obtenerFormatoFila()));
-		}
+		for (Libro libro : lista)
+			System.out.println(Arrays.toString(libro.enFormatoFila()));
+		
+		System.out.println();
+		
+		lista = dao.eliminar("10");
+		
+		for (Libro libro : lista)
+			System.out.println(Arrays.toString(libro.enFormatoFila()));
+
+		System.out.println();
+
+		dao.guardar(new Libro("10","Programacion","Elias Garcia","Puerto de palos",2018,1745));
+		
+		lista = dao.obtenerLibros();
+		
+		for (Libro libro : lista)
+			System.out.println(Arrays.toString(libro.enFormatoFila()));
+
+		System.out.println();
 		
 		lista = dao.ordenar();
 		
-		for (Libro libro : lista) {
-			System.out.println(Arrays.toString(libro.obtenerFormatoFila()));
-		}
+		for (Libro libro : lista)
+			System.out.println(Arrays.toString(libro.enFormatoFila()));
 	}
 }

@@ -81,8 +81,12 @@ public class Libro implements Comparable<Libro>, Comparator<Libro> {
 		return uno.compareTo(dos);
 	}
 
-	public String[] obtenerFormatoFila() {
+	public String[] enFormatoFila() {
 		return new String[]{obtenerISBN(),obtenerTitulo(),obtenerAutor(),obtenerEditorial(),String.valueOf(obtenerEdicion()),String.valueOf(obtenerAnioPublicacion())};
+	}
+	
+	public String enFormatoResgistro(String separador) {
+		return new String(isbn + separador + titulo + separador + autor + separador + editorial + separador + edicion + separador + anioPublicacion + "\n");
 	}
 
 	@Override

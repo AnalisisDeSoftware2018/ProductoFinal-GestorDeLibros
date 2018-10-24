@@ -26,15 +26,15 @@ class ABMInterfaz extends JFrame {
 	private JTextField txfEditorial;
 	private JTextField txfEdicion;
 	private JTextField txfAnioPublicion;
-	private JTable tabla;
-	private TableModel tablaModel;
-	private String[] columnas = { "ISBN", "Titulo", "Autor", "Editorial", "Edicion", "Año publicacion" };
-	private JButton btnNuevo;
+	private JButton btnAgregar;
 	private JButton btnEliminar;
 	private JButton btnModificar;
 	private JButton btnBuscar;
 	private JButton btnLimpiar;
 	private JButton btnOrdenar;
+	private JTable tabla;
+	private TableModel tablaModel;
+	private String[] columnas = { "ISBN", "Titulo", "Autor", "Editorial", "Edicion", "Año publicacion" };
 
 	ABMInterfaz() {
 		libroService = LibroService.obtenerSingletonInstance();
@@ -111,9 +111,9 @@ class ABMInterfaz extends JFrame {
 		lblAoPublicacion.setBounds(569, 54, 94, 15);
 		getContentPane().add(lblAoPublicacion);
 
-		btnNuevo = new JButton("Nuevo");
-		btnNuevo.setBounds(694, 34, 192, 25);
-		getContentPane().add(btnNuevo);
+		btnAgregar = new JButton("Agregar");
+		btnAgregar.setBounds(694, 34, 192, 25);
+		getContentPane().add(btnAgregar);
 
 		btnOrdenar = new JButton("Ordenar");
 		btnOrdenar.setBounds(551, 444, 100, 25);
@@ -135,8 +135,17 @@ class ABMInterfaz extends JFrame {
 		btnLimpiar.setBounds(792, 71, 94, 25);
 		getContentPane().add(btnLimpiar);
 	}
+	
+	private void especificarListeners() {
+		btnBuscar.addActionListener(e -> buscar());
+		btnLimpiar.addActionListener(e -> limpiar());
+		btnOrdenar.addActionListener(e -> ordenar());
+		btnAgregar.addActionListener(e -> agregar());
+		btnEliminar.addActionListener(e -> eliminar());
+		btnModificar.addActionListener(e -> modificar());
+	}
 
-	void buscarLibros() {
+	void buscar() {
 		String isbn = txfIsbn.getText();
 		String titulo = txfTitulo.getText();
 		String autor = txfAutor.getText();
@@ -144,53 +153,45 @@ class ABMInterfaz extends JFrame {
 		String edicion = txfEdicion.getText();
 		String anioPublicacion = txfAnioPublicion.getText();
 
-		List<Libro> libros = libroService.obtenerLibroConFiltro(isbn, titulo, autor, editorial, edicion,
-				anioPublicacion);
+		List<Libro> libros = libroService.obtenerLibroConFiltro(isbn, titulo, autor, editorial, edicion, anioPublicacion);
 
 		tablaModel = new DefaultTableModel(obtenerLibrosToModel(libros), columnas);
-
 		tabla.setModel(tablaModel);
 	}
 
-	private void ordenarLibros() {
+	private void ordenar() {
 
 		tablaModel = new DefaultTableModel(obtenerLibrosToModel(libroService.ordenar()), columnas);
 		tabla.setModel(tablaModel);
 	}
 
-	private Object[][] obtenerLibrosToModel(List<Libro> libros) {
-		String[][] filas = new String[libros.size()][6];
-		int i = 0;
-		for (Libro libro : libros)
-			filas[i++] = libro.obtenerFormatoFila();
-
-		return filas;
-	}
-
-	private void especificarListeners() {
-		btnBuscar.addActionListener(e -> buscarLibros());
-		btnLimpiar.addActionListener(e -> limpiar());
-		btnNuevo.addActionListener(e -> nuevoLibro());
-		btnModificar.addActionListener(e -> modificar());
-		btnOrdenar.addActionListener(e -> ordenarLibros());
-		btnEliminar.addActionListener(e -> eliminar());
-	}
-
-	private void nuevoLibro() {
+	private void agregar() {
 		new NuevoLibroInterfaz(this);
 	}
 
 	private void eliminar() {
-		if (tabla.getSelectedRow() == -1)
+		int libroSeleccionado = tabla.getSelectedRow();
+		
+		if ( libroSeleccionado == -1)
 			JOptionPane.showMessageDialog(null, "Debe seleccionar un libro.");
 		else
 			try {
-				String isbn = String.valueOf(tabla.getModel().getValueAt(tabla.getSelectedRow(), 0));
-				libroService.eliminar(isbn);
-				buscarLibros();
+				String isbn = tabla.getModel().getValueAt(libroSeleccionado, 0).toString();
+				
+				tablaModel = new DefaultTableModel(obtenerLibrosToModel(libroService.eliminar(isbn)), columnas);
+				tabla.setModel(tablaModel);
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(null, "No se pudo eliminar correctamente.");
 			}
+	}
+	
+	private Object[][] obtenerLibrosToModel(List<Libro> libros) {
+		String[][] filas = new String[libros.size()][6];
+		int i = 0;
+		for (Libro libro : libros)
+			filas[i++] = libro.enFormatoFila();
+		
+		return filas;
 	}
 
 	private void limpiar() {
@@ -203,18 +204,22 @@ class ABMInterfaz extends JFrame {
 	}
 
 	private void modificar() {
-		if (tabla.getSelectedRow() == -1)
+		int libroSeleccionado = tabla.getSelectedRow();
+		if ( libroSeleccionado == -1)
 			JOptionPane.showMessageDialog(null, "Debe seleccionar un libro.");
 		else
 			try {
-				int row = tabla.getSelectedRow();
-				Libro aModificar = new Libro((String) tabla.getValueAt(row, 0), (String) tabla.getValueAt(row, 1),
-						(String) tabla.getValueAt(row, 2), (String) tabla.getValueAt(row, 3),
-						Integer.parseInt((String) tabla.getValueAt(row, 4)),
-						Integer.parseInt((String) tabla.getValueAt(row, 5)));
+				String isbn = tabla.getValueAt(libroSeleccionado, 0).toString();
+				String titulo = tabla.getValueAt(libroSeleccionado, 1).toString();
+				String autor = tabla.getValueAt(libroSeleccionado, 2).toString();
+				String editorial = tabla.getValueAt(libroSeleccionado, 3).toString();
+				Integer edicion = Integer.parseInt(tabla.getValueAt(libroSeleccionado, 4).toString());
+				Integer anioPublicacion = Integer.parseInt(tabla.getValueAt(libroSeleccionado, 5).toString());
+				
+				Libro aModificar = new Libro(isbn, titulo, autor, editorial, edicion, anioPublicacion);
 
 				new ModificarLibroInterfaz(aModificar, this);
-				buscarLibros();
+				buscar();
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(null, "No se pudo eliminar correctamente.");
 			}

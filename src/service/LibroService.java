@@ -32,46 +32,43 @@ public class LibroService {
 		return libroDao.ordenar();
 	}
 
-	public void eliminar(String isbn) {
-		libroDao.eliminar(isbn);
+	public List<Libro> eliminar(String isbn) {
+		return libroDao.eliminar(isbn);
 	}
-
-	public List<Libro> obtenerLibroConFiltro(String isbn, String titulo, String autor, String editorial, String edicion,
-			String anioPublicacion) {
-		List<Libro> libros = this.obtenerLibros(), result = new ArrayList<>();
-		for (Libro libro : libros) {
-			if (libroEsValido(libro, isbn, titulo, autor, editorial, edicion, anioPublicacion)) {
-				result.add(libro);
-			}
-		}
-		return result;
-	}
-
+	
 	private List<Libro> obtenerLibros() {
 		return libroDao.obtenerLibros();
 	}
 
-	private boolean libroEsValido(Libro libro, String isbn, String titulo, String autor, String editorial,
-			String edicion, String anioPublicacion) {
+	public List<Libro> obtenerLibroConFiltro(String isbn, String titulo, String autor, String editorial, String edicion, String anioPublicacion) {
+		List<Libro> libros = this.obtenerLibros(), resultado = new ArrayList<>();
+		for (Libro libro : libros)
+			if (libroEsValido(libro, isbn, titulo, autor, editorial, edicion, anioPublicacion))
+				resultado.add(libro);
+		
+		return resultado;
+	}
 
-		if (atributoEsIgualAValor(libro.obtenerISBN(), isbn)) {
+	private boolean libroEsValido(Libro libro, String isbn, String titulo, String autor, String editorial, String edicion, String anioPublicacion) {
+
+		if (atributoEsIgualAValor(libro.obtenerISBN(), isbn)) 
 			return false;
-		}
-		if (atributoContieneValor(libro.obtenerTitulo(), titulo)) {
+		
+		if (atributoContieneValor(libro.obtenerTitulo(), titulo)) 
 			return false;
-		}
-		if (atributoContieneValor(libro.obtenerAutor(), autor)) {
+		
+		if (atributoContieneValor(libro.obtenerAutor(), autor)) 
 			return false;
-		}
-		if (atributoContieneValor(libro.obtenerEditorial(), editorial)) {
+		
+		if (atributoContieneValor(libro.obtenerEditorial(), editorial)) 
 			return false;
-		}
-		if (atributoComienzaConValor(libro.obtenerEdicion(), edicion)) {
+		
+		if (atributoComienzaConValor(libro.obtenerEdicion(), edicion)) 
 			return false;
-		}
-		if (atributoComienzaConValor(libro.obtenerAnioPublicacion(), anioPublicacion)) {
+		
+		if (atributoComienzaConValor(libro.obtenerAnioPublicacion(), anioPublicacion)) 
 			return false;
-		}
+		
 		return true;
 	}
 

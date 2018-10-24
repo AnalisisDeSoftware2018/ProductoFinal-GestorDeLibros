@@ -110,7 +110,7 @@ class NuevoLibroInterfaz {
 				Libro nuevo = new Libro(txtIsbn.getText(), txtTitulo.getText(), txtAutor.getText(), txtEditorial.getText(), Integer.parseInt(txtEdicin.getText()), Integer.parseInt(txtAoPublicacin.getText()));
 
 				if(libroService.guardar(nuevo)) {
-					abmInterfaz.buscarLibros();
+					abmInterfaz.buscar();
 					JOptionPane.showMessageDialog(null, "Libro guardado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
 					frame.dispose();
 				} else {
