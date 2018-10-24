@@ -25,16 +25,10 @@ public class ModificarLibroInterfaz {
 	private LibroService libroService;
 	private Libro libro;
 	private String viejoIsbn;
-
-	/**
-	 * Create the application.
-	 */
-	public ModificarLibroInterfaz() {
-		libroService = LibroService.obtenerSingletonInstance();
-		initialize();
-	}
+	private ABMInterfaz abmInterfaz;
 	
-	public ModificarLibroInterfaz(Libro libro) {
+	public ModificarLibroInterfaz(Libro libro,ABMInterfaz abmInterfaz) {
+		this.abmInterfaz = abmInterfaz;
 		this.libro = libro;
 		this.viejoIsbn = libro.obtenerISBN();
 		libroService = LibroService.obtenerSingletonInstance();
@@ -147,6 +141,7 @@ public class ModificarLibroInterfaz {
 						libroService.eliminar(nuevo.obtenerISBN());
 						if(libroService.guardar(nuevo) == true) {
 							JOptionPane.showMessageDialog(null, "Libro modificado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
+							abmInterfaz.buscarLibros();
 							frame.dispose();
 						} else {
 							JOptionPane.showMessageDialog(null, "No se pudo modificar el libro nuevo", "", JOptionPane.ERROR_MESSAGE);
@@ -155,6 +150,7 @@ public class ModificarLibroInterfaz {
 						if(libroService.guardar(nuevo) == true) {
 							libroService.eliminar(libro.obtenerISBN());
 							JOptionPane.showMessageDialog(null, "Libro modificado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
+							abmInterfaz.buscarLibros();
 							frame.dispose();
 						} else {
 							JOptionPane.showMessageDialog(null, "No se pudo modificar el libro nuevo", "", JOptionPane.ERROR_MESSAGE);

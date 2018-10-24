@@ -1,4 +1,4 @@
-1&&Historia I&&Elias Garcia&&Puerto de palos&&2018&&1994
+1&&Logica&&Perez H.&&Saint&&2018&&1994
 2&&Historia II&&Elias Garcia&&Puerto de palos&&2018&&1820
 3&&Historia III&&Elias Garcia&&Puerto de palos&&2018&&2016
 4&&Matematica&&Elias Garcia&&Puerto de palos&&2018&&2015
@@ -13,3 +13,4 @@
 15&&Maria DB&&Elias Garcia&&Puerto de palos&&2018&&2012
 16&&Informix&&Elias Garcia&&Puerto de palos&&2018&&2011
 17&&Matematica III&&Daniel&&Santillana&&1&&2018
+18&&Informatica&&Rodolfo &&UNLAM EDIT&&2018&&2014

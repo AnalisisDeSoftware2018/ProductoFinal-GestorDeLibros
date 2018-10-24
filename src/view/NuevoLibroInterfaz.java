@@ -1,7 +1,10 @@
 package view;
 
-import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -9,11 +12,6 @@ import javax.swing.JTextField;
 
 import model.Libro;
 import service.LibroService;
-
-import java.awt.Font;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class NuevoLibroInterfaz {
 
@@ -25,28 +23,11 @@ public class NuevoLibroInterfaz {
 	private JTextField txtEdicin;
 	private JTextField txtAoPublicacin;
 	private LibroService libroService;
+	private ABMInterfaz abmInterfaz;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					NuevoLibroInterfaz window = new NuevoLibroInterfaz();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the application.
-	 */
-	public NuevoLibroInterfaz() {
+	public NuevoLibroInterfaz(ABMInterfaz abmInterfaz) {
 		libroService = LibroService.obtenerSingletonInstance();
+		this.abmInterfaz = abmInterfaz;
 		initialize();
 	}
 
@@ -132,6 +113,7 @@ public class NuevoLibroInterfaz {
 					Libro nuevo = new Libro(txtIsbn.getText(), txtTitulo.getText(), txtAutor.getText(), txtEditorial.getText(), Integer.parseInt(txtEdicin.getText()), Integer.parseInt(txtAoPublicacin.getText()));
 					
 					if(libroService.guardar(nuevo) == true) {
+						abmInterfaz.buscarLibros();
 						JOptionPane.showMessageDialog(null, "Libro guardado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
 						frame.dispose();
 					} else {

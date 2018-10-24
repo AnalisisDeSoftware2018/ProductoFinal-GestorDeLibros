@@ -15,8 +15,6 @@ import javax.swing.table.TableModel;
 
 import model.Libro;
 import service.LibroService;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class ABMInterfaz extends JFrame {
 
@@ -43,7 +41,7 @@ public class ABMInterfaz extends JFrame {
 		especificarComponents();
 		especificarListeners();
 	}
-	
+
 	private void especificarComponents() {
 		setTitle("Gestor de Libros");
 		setBounds(100, 100, 900, 506);
@@ -114,14 +112,9 @@ public class ABMInterfaz extends JFrame {
 		getContentPane().add(lblAoPublicacion);
 
 		btnNuevo = new JButton("Nuevo");
-		btnNuevo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				new NuevoLibroInterfaz();
-			}
-		});
 		btnNuevo.setBounds(694, 34, 192, 25);
 		getContentPane().add(btnNuevo);
-		
+
 		btnOrdenar = new JButton("Ordenar");
 		btnOrdenar.setBounds(551, 444, 100, 25);
 		getContentPane().add(btnOrdenar);
@@ -131,11 +124,6 @@ public class ABMInterfaz extends JFrame {
 		getContentPane().add(btnEliminar);
 
 		btnModificar = new JButton("Modificar");
-		btnModificar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				modificar();
-			}
-		});
 		btnModificar.setBounds(660, 444, 100, 25);
 		getContentPane().add(btnModificar);
 
@@ -148,7 +136,7 @@ public class ABMInterfaz extends JFrame {
 		getContentPane().add(btnLimpiar);
 	}
 
-	private void buscarLibros() {
+	public void buscarLibros() {
 		String isbn = txfIsbn.getText();
 		String titulo = txfTitulo.getText();
 		String autor = txfAutor.getText();
@@ -156,17 +144,17 @@ public class ABMInterfaz extends JFrame {
 		String edicion = txfEdicion.getText();
 		String anioPublicacion = txfAnioPublicion.getText();
 
-		List<Libro> libros = libroService.obtenerLibroConFiltro(isbn, titulo, autor, editorial, edicion, anioPublicacion);
+		List<Libro> libros = libroService.obtenerLibroConFiltro(isbn, titulo, autor, editorial, edicion,
+				anioPublicacion);
 
 		tablaModel = new DefaultTableModel(obtenerLibrosToModel(libros), columnas);
 
 		tabla.setModel(tablaModel);
 	}
-	
-	private void ordenarLibros() {
-		
-		tablaModel = new DefaultTableModel(obtenerLibrosToModel(libroService.ordenar()), columnas);
 
+	private void ordenarLibros() {
+
+		tablaModel = new DefaultTableModel(obtenerLibrosToModel(libroService.ordenar()), columnas);
 		tabla.setModel(tablaModel);
 	}
 
@@ -182,10 +170,14 @@ public class ABMInterfaz extends JFrame {
 	private void especificarListeners() {
 		btnBuscar.addActionListener(e -> buscarLibros());
 		btnLimpiar.addActionListener(e -> limpiar());
-		// btnNuevo.addActionListener(e->nuevoLibro());
-		// btnModificar.addActionListener(e->modificar());
+		btnNuevo.addActionListener(e -> nuevoLibro());
+		btnModificar.addActionListener(e -> modificar());
 		btnOrdenar.addActionListener(e -> ordenarLibros());
 		btnEliminar.addActionListener(e -> eliminar());
+	}
+
+	private void nuevoLibro() {
+		new NuevoLibroInterfaz(this);
 	}
 
 	private void eliminar() {
@@ -209,19 +201,19 @@ public class ABMInterfaz extends JFrame {
 		txfEdicion.setText("");
 		txfAnioPublicion.setText("");
 	}
-	
+
 	private void modificar() {
-		if(tabla.getSelectedRow() == -1)
+		if (tabla.getSelectedRow() == -1)
 			JOptionPane.showMessageDialog(null, "Debe seleccionar un libro.");
 		else
 			try {
 				int row = tabla.getSelectedRow();
-				Libro aModificar = new Libro((String) tabla.getValueAt(row, 0), (String) tabla.getValueAt(row, 1), 
-												(String) tabla.getValueAt(row, 2), (String) tabla.getValueAt(row, 3), 
-												Integer.parseInt((String) tabla.getValueAt(row, 4)),
-												Integer.parseInt((String) tabla.getValueAt(row, 5)));
-				
-				new ModificarLibroInterfaz(aModificar);
+				Libro aModificar = new Libro((String) tabla.getValueAt(row, 0), (String) tabla.getValueAt(row, 1),
+						(String) tabla.getValueAt(row, 2), (String) tabla.getValueAt(row, 3),
+						Integer.parseInt((String) tabla.getValueAt(row, 4)),
+						Integer.parseInt((String) tabla.getValueAt(row, 5)));
+
+				new ModificarLibroInterfaz(aModificar, this);
 				buscarLibros();
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(null, "No se pudo eliminar correctamente.");
