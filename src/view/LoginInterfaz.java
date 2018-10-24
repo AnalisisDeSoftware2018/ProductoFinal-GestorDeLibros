@@ -13,8 +13,6 @@ import service.UsuarioService;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class LoginInterfaz {
 
@@ -27,14 +25,12 @@ public class LoginInterfaz {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoginInterfaz window = new LoginInterfaz();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		EventQueue.invokeLater(() -> {
+			try {
+				LoginInterfaz window = new LoginInterfaz();
+				window.frame.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		});
 	}
@@ -42,7 +38,7 @@ public class LoginInterfaz {
 	/**
 	 * Create the application.
 	 */
-	public LoginInterfaz() {
+	private LoginInterfaz() {
 		usuarioService = UsuarioService.getSingletonInstance();
 		initialize();
 	}
@@ -73,44 +69,34 @@ public class LoginInterfaz {
 		userField.setColumns(10);
 		
 		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String user = userField.getText();
-				String pass = new String(passwordField.getPassword());
-				
-				if(user.isEmpty() || pass.isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Complete los campos por favor", "", JOptionPane.ERROR_MESSAGE);
+		btnAceptar.addActionListener(e -> {
+			String user1 = userField.getText();
+			String pass1 = new String(passwordField.getPassword());
+
+			if(user1.isEmpty() || pass1.isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Complete los campos por favor", "", JOptionPane.ERROR_MESSAGE);
+			} else {
+				Usuario usuario = new Usuario(user1, pass1);
+
+				if(usuarioService.loginValido(usuario)) {
+					new ABMInterfaz().setVisible(true);
+					frame.dispose();
 				} else {
-					Usuario usuario = new Usuario(user, pass);
-					
-					if(usuarioService.loginValido(usuario) == true) {
-						new ABMInterfaz().setVisible(true);
-						frame.dispose();
-					} else {
-						JOptionPane.showMessageDialog(null, "Usuario no valido", "", JOptionPane.ERROR_MESSAGE);
-					}
+					JOptionPane.showMessageDialog(null, "Usuario no valido", "", JOptionPane.ERROR_MESSAGE);
 				}
-				
 			}
+
 		});
 		btnAceptar.setBounds(309, 29, 89, 23);
 		frame.getContentPane().add(btnAceptar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				frame.dispose();
-			}
-		});
+		btnCancelar.addActionListener(arg0 -> frame.dispose());
 		btnCancelar.setBounds(309, 60, 89, 23); 
 		frame.getContentPane().add(btnCancelar);
 		
 		JButton btnRegistro = new JButton("Registrarse");
-		btnRegistro.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				new RegistroInterfaz();
-			}
-		});
+		btnRegistro.addActionListener(e -> new RegistroInterfaz());
 		btnRegistro.setBounds(272, 115, 126, 23);
 		frame.getContentPane().add(btnRegistro);
 		

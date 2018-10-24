@@ -1,8 +1,6 @@
 package view;
 
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,7 +11,7 @@ import javax.swing.JTextField;
 import model.Libro;
 import service.LibroService;
 
-public class NuevoLibroInterfaz {
+class NuevoLibroInterfaz {
 
 	private JFrame frame;
 	private JTextField txtIsbn;
@@ -25,7 +23,7 @@ public class NuevoLibroInterfaz {
 	private LibroService libroService;
 	private ABMInterfaz abmInterfaz;
 
-	public NuevoLibroInterfaz(ABMInterfaz abmInterfaz) {
+	NuevoLibroInterfaz(ABMInterfaz abmInterfaz) {
 		libroService = LibroService.obtenerSingletonInstance();
 		this.abmInterfaz = abmInterfaz;
 		initialize();
@@ -103,22 +101,20 @@ public class NuevoLibroInterfaz {
 		txtAoPublicacin.setColumns(10);
 		
 		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-				if(txtIsbn.getText().isEmpty() || txtAutor.getText().isEmpty() || txtTitulo.getText().isEmpty()
-						|| txtAoPublicacin.getText().isEmpty() || txtEditorial.getText().isEmpty() || txtEdicin.getText().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Complete los campos por favor", "", JOptionPane.ERROR_MESSAGE);
+		btnAceptar.addActionListener(arg0 -> {
+
+			if(txtIsbn.getText().isEmpty() || txtAutor.getText().isEmpty() || txtTitulo.getText().isEmpty()
+					|| txtAoPublicacin.getText().isEmpty() || txtEditorial.getText().isEmpty() || txtEdicin.getText().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Complete los campos por favor", "", JOptionPane.ERROR_MESSAGE);
+			} else {
+				Libro nuevo = new Libro(txtIsbn.getText(), txtTitulo.getText(), txtAutor.getText(), txtEditorial.getText(), Integer.parseInt(txtEdicin.getText()), Integer.parseInt(txtAoPublicacin.getText()));
+
+				if(libroService.guardar(nuevo)) {
+					abmInterfaz.buscarLibros();
+					JOptionPane.showMessageDialog(null, "Libro guardado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
+					frame.dispose();
 				} else {
-					Libro nuevo = new Libro(txtIsbn.getText(), txtTitulo.getText(), txtAutor.getText(), txtEditorial.getText(), Integer.parseInt(txtEdicin.getText()), Integer.parseInt(txtAoPublicacin.getText()));
-					
-					if(libroService.guardar(nuevo) == true) {
-						abmInterfaz.buscarLibros();
-						JOptionPane.showMessageDialog(null, "Libro guardado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
-						frame.dispose();
-					} else {
-						JOptionPane.showMessageDialog(null, "No se pudo guardar el libro nuevo", "", JOptionPane.ERROR_MESSAGE);
-					}
+					JOptionPane.showMessageDialog(null, "No se pudo guardar el libro nuevo", "", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -126,11 +122,7 @@ public class NuevoLibroInterfaz {
 		frame.getContentPane().add(btnAceptar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				frame.dispose();
-			}
-		});
+		btnCancelar.addActionListener(arg0 -> frame.dispose());
 		btnCancelar.setBounds(188, 210, 89, 23);
 		frame.getContentPane().add(btnCancelar);
 		
