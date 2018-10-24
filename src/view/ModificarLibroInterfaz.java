@@ -140,8 +140,8 @@ public class ModificarLibroInterfaz {
 					if(viejoIsbn.equals(nuevo.obtenerISBN()) == true) {				//estoy modificando otro campo que no es el isbn, no hay problema de insercion
 						libroService.eliminar(nuevo.obtenerISBN());
 						if(libroService.guardar(nuevo) == true) {
-							JOptionPane.showMessageDialog(null, "Libro modificado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
 							abmInterfaz.buscarLibros();
+							JOptionPane.showMessageDialog(null, "Libro modificado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
 							frame.dispose();
 						} else {
 							JOptionPane.showMessageDialog(null, "No se pudo modificar el libro nuevo", "", JOptionPane.ERROR_MESSAGE);
@@ -149,8 +149,8 @@ public class ModificarLibroInterfaz {
 					} else {														//si modifique el isbn, puedo tener problema de duplicados con otros libros
 						if(libroService.guardar(nuevo) == true) {
 							libroService.eliminar(libro.obtenerISBN());
-							JOptionPane.showMessageDialog(null, "Libro modificado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
 							abmInterfaz.buscarLibros();
+							JOptionPane.showMessageDialog(null, "Libro modificado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
 							frame.dispose();
 						} else {
 							JOptionPane.showMessageDialog(null, "No se pudo modificar el libro nuevo", "", JOptionPane.ERROR_MESSAGE);
