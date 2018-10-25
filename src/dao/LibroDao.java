@@ -42,8 +42,14 @@ public class LibroDao {
 			Scanner sc = new Scanner(new File("Libros.txt"));
 			while (sc.hasNextLine()) {
 				String[] atributos = sc.nextLine().split(SEPARADOR);
-				libros.add(new Libro(atributos[0], atributos[1], atributos[2], atributos[3],
-						Integer.parseInt(atributos[4]), Integer.parseInt(atributos[5])));
+				String isbn = atributos[0];
+				String titulo = atributos[1];
+				String autor = atributos[2];
+				String editorial = atributos[3];
+				Integer edicion = Integer.parseInt(atributos[4]);
+				Integer anioPublicacion = Integer.parseInt(atributos[5]);
+				
+				libros.add(new Libro(isbn, titulo, autor, editorial, edicion, anioPublicacion));
 			}
 			sc.close();
 		} catch (FileNotFoundException evento) {
@@ -71,7 +77,7 @@ public class LibroDao {
 		if(libroValido(libro)) {
 			try {
 				out = new BufferedWriter(new FileWriter("Libros.txt", true));
-				out.write(libro.enFormatoResgistro(SEPARADOR));
+				out.write(libro.enFormatoRegistro(SEPARADOR));
 				out.close();
 				
 				return true;
@@ -107,7 +113,7 @@ public class LibroDao {
             pw = new PrintWriter(fw);
             
             for (Libro libro : libros)
-            	pw.print(libro.enFormatoResgistro(SEPARADOR));
+            	pw.print(libro.enFormatoRegistro(SEPARADOR));
             
             fw.close();
             pw.close();

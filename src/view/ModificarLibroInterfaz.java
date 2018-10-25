@@ -14,16 +14,16 @@ import javax.swing.JButton;
 class ModificarLibroInterfaz {
 
 	private JFrame frame;
-	private JTextField campoISBN;
-	private JTextField campoTitulo;
-	private JTextField campoAutor;
-	private JTextField campoEditorial;
-	private JTextField campoEdicion;
-	private JTextField campoAnioPublicacion;
-	private LibroService libroService;
+	private JTextField txfISBN;
+	private JTextField txfTitulo;
+	private JTextField txfAutor;
+	private JTextField txfEditorial;
+	private JTextField txfEdicion;
+	private JTextField txfAnioPublicacion;
 	private Libro libro;
 	private String viejoIsbn;
 	private ABMInterfaz abmInterfaz;
+	private LibroService libroService;
 	
 	ModificarLibroInterfaz(Libro libro, ABMInterfaz abmInterfaz) {
 		this.abmInterfaz = abmInterfaz;
@@ -47,12 +47,12 @@ class ModificarLibroInterfaz {
 		lblCompleteLosCampos.setBounds(10, 11, 209, 14);
 		frame.getContentPane().add(lblCompleteLosCampos);
 		
-		campoISBN = new JTextField();
-		campoISBN.setToolTipText("");
-		campoISBN.setBounds(10, 61, anchoCampo, 20);
-		campoISBN.setText(libro.obtenerISBN());
-		frame.getContentPane().add(campoISBN);
-		campoISBN.setColumns(10);
+		txfISBN = new JTextField();
+		txfISBN.setToolTipText("");
+		txfISBN.setBounds(10, 61, anchoCampo, 20);
+		txfISBN.setText(libro.obtenerISBN());
+		frame.getContentPane().add(txfISBN);
+		txfISBN.setColumns(10);
 		
 		JLabel lblIsbn = new JLabel("ISBN:");
 		lblIsbn.setBounds(10, 36, anchoCampo, 14);
@@ -62,51 +62,51 @@ class ModificarLibroInterfaz {
 		lblTtulo.setBounds(10, 92, anchoCampo, 14);
 		frame.getContentPane().add(lblTtulo);
 		
-		campoTitulo = new JTextField();
-		campoTitulo.setBounds(10, 117, anchoCampo, 20);
-		campoTitulo.setText(libro.obtenerTitulo());
-		frame.getContentPane().add(campoTitulo);
-		campoTitulo.setColumns(10);
+		txfTitulo = new JTextField();
+		txfTitulo.setBounds(10, 117, anchoCampo, 20);
+		txfTitulo.setText(libro.obtenerTitulo());
+		frame.getContentPane().add(txfTitulo);
+		txfTitulo.setColumns(10);
 		
 		JLabel lblAutor = new JLabel("Autor:");
 		lblAutor.setBounds(10, 148, anchoCampo, 14);
 		frame.getContentPane().add(lblAutor);
 		
-		campoAutor = new JTextField();
-		campoAutor.setBounds(10, 173, anchoCampo, 20);
-		campoAutor.setText(libro.obtenerAutor());
-		frame.getContentPane().add(campoAutor);
-		campoAutor.setColumns(10);
+		txfAutor = new JTextField();
+		txfAutor.setBounds(10, 173, anchoCampo, 20);
+		txfAutor.setText(libro.obtenerAutor());
+		frame.getContentPane().add(txfAutor);
+		txfAutor.setColumns(10);
 		
 		JLabel lblEditorial = new JLabel("Editorial:");
 		lblEditorial.setBounds(217, 36, anchoCampo, 14);
 		frame.getContentPane().add(lblEditorial);
 		
-		campoEditorial = new JTextField();
-		campoEditorial.setBounds(217, 61, anchoCampo, 20);
-		campoEditorial.setText(libro.obtenerEditorial());
-		frame.getContentPane().add(campoEditorial);
-		campoEditorial.setColumns(10);
+		txfEditorial = new JTextField();
+		txfEditorial.setBounds(217, 61, anchoCampo, 20);
+		txfEditorial.setText(libro.obtenerEditorial());
+		frame.getContentPane().add(txfEditorial);
+		txfEditorial.setColumns(10);
 		
 		JLabel lblEdicin = new JLabel("Edición:");
 		lblEdicin.setBounds(217, 92, anchoCampo, 14);
 		frame.getContentPane().add(lblEdicin);
 		
-		campoEdicion = new JTextField();
-		campoEdicion.setBounds(217, 117, anchoCampo, 20);
-		campoEdicion.setText(libro.obtenerEdicion().toString());
-		frame.getContentPane().add(campoEdicion);
-		campoEdicion.setColumns(10);
+		txfEdicion = new JTextField();
+		txfEdicion.setBounds(217, 117, anchoCampo, 20);
+		txfEdicion.setText(libro.obtenerEdicion().toString());
+		frame.getContentPane().add(txfEdicion);
+		txfEdicion.setColumns(10);
 		
 		JLabel lblAoPublicacin = new JLabel("Año publicación:");
 		lblAoPublicacin.setBounds(217, 148, anchoCampo, 14);
 		frame.getContentPane().add(lblAoPublicacin);
 		
-		campoAnioPublicacion = new JTextField();
-		campoAnioPublicacion.setBounds(217, 173, anchoCampo, 20);
-		campoAnioPublicacion.setText(libro.obtenerAnioPublicacion().toString());
-		frame.getContentPane().add(campoAnioPublicacion);
-		campoAnioPublicacion.setColumns(10);
+		txfAnioPublicacion = new JTextField();
+		txfAnioPublicacion.setBounds(217, 173, anchoCampo, 20);
+		txfAnioPublicacion.setText(libro.obtenerAnioPublicacion().toString());
+		frame.getContentPane().add(txfAnioPublicacion);
+		txfAnioPublicacion.setColumns(10);
 		
 		JButton btnAceptar = new JButton("Aceptar");
 		btnAceptar.addActionListener(arg0 -> modificar());
@@ -142,12 +142,12 @@ class ModificarLibroInterfaz {
 		if(campoVacio()) {
 			JOptionPane.showMessageDialog(null, "Complete los campos por favor", "", JOptionPane.ERROR_MESSAGE);
 		} else {
-			String isbn = campoISBN.getText();
-			String titulo = campoTitulo.getText(); 
-			String autor = campoAutor.getText();
-			String editorial = campoEditorial.getText();
-			Integer edicion = Integer.parseInt(campoEdicion.getText());
-			Integer anioPublicacion = Integer.parseInt(campoAnioPublicacion.getText());
+			String isbn = txfISBN.getText();
+			String titulo = txfTitulo.getText(); 
+			String autor = txfAutor.getText();
+			String editorial = txfEditorial.getText();
+			Integer edicion = Integer.parseInt(txfEdicion.getText());
+			Integer anioPublicacion = Integer.parseInt(txfAnioPublicacion.getText());
 			
 			Libro nuevo = new Libro(isbn, titulo, autor, editorial, edicion, anioPublicacion);
 
@@ -174,11 +174,11 @@ class ModificarLibroInterfaz {
 	}
 	
 	private boolean campoVacio() {
-		return  campoISBN.getText().isEmpty() 		|| 
-				campoAutor.getText().isEmpty() 		|| 
-				campoTitulo.getText().isEmpty() 		|| 
-				campoAnioPublicacion.getText().isEmpty() ||
-				campoEditorial.getText().isEmpty() 	||
-				campoEdicion.getText().isEmpty();
+		return  txfISBN.getText().isEmpty() 			|| 
+				txfAutor.getText().isEmpty() 			|| 
+				txfTitulo.getText().isEmpty() 			|| 
+				txfAnioPublicacion.getText().isEmpty() 	||
+				txfEditorial.getText().isEmpty() 		||
+				txfEdicion.getText().isEmpty();
 	}
 }

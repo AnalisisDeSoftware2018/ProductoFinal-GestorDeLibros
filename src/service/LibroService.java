@@ -16,7 +16,6 @@ public class LibroService {
 	}
 
 	public static LibroService obtenerSingletonInstance() {
-
 		return instancia != null ? instancia : new LibroService();
 	}
 
@@ -36,60 +35,70 @@ public class LibroService {
 		return libroDao.eliminar(isbn);
 	}
 	
-	private List<Libro> obtenerLibros() {
+	public List<Libro> obtenerLibros() {
 		return libroDao.obtenerLibros();
 	}
 
 	public List<Libro> obtenerLibroConFiltro(String isbn, String titulo, String autor, String editorial, String edicion, String anioPublicacion) {
 		List<Libro> libros = this.obtenerLibros(), resultado = new ArrayList<>();
-		for (Libro libro : libros)
-			if (libroEsValido(libro, isbn, titulo, autor, editorial, edicion, anioPublicacion))
+		for (Libro libro : libros) {
+			if (libroEsValido(libro, isbn, titulo, autor, editorial, edicion, anioPublicacion)) {
 				resultado.add(libro);
+			}
+		}
 		
 		return resultado;
 	}
 
 	private boolean libroEsValido(Libro libro, String isbn, String titulo, String autor, String editorial, String edicion, String anioPublicacion) {
 
-		if (atributoEsIgualAValor(libro.obtenerISBN(), isbn)) 
-			return false;
+		boolean coincidencia = false;
 		
-		if (atributoContieneValor(libro.obtenerTitulo(), titulo)) 
-			return false;
+		if ( !coincidencia && libro.obtenerISBN().equals(isbn)) { 
+			coincidencia = true;
+		}
 		
-		if (atributoContieneValor(libro.obtenerAutor(), autor)) 
-			return false;
+		if ( !coincidencia && libro.obtenerTitulo().equals(titulo)) { 
+			coincidencia = true;
+		}
 		
-		if (atributoContieneValor(libro.obtenerEditorial(), editorial)) 
-			return false;
+		if ( !coincidencia && libro.obtenerAutor().equals(autor)) { 
+			coincidencia = true;
+		}
 		
-		if (atributoComienzaConValor(libro.obtenerEdicion(), edicion)) 
-			return false;
+		if ( !coincidencia && libro.obtenerEditorial().equals(editorial)) {
+			coincidencia = true;
+		}
 		
-		if (atributoComienzaConValor(libro.obtenerAnioPublicacion(), anioPublicacion)) 
-			return false;
+		if ( !coincidencia && libro.obtenerEdicion().toString().equals(edicion)) {
+			coincidencia = true;
+		}
 		
-		return true;
+		if ( !coincidencia && libro.obtenerAnioPublicacion().toString().equals(anioPublicacion)) {
+			coincidencia = true;
+		}
+		
+		return coincidencia;
 	}
 
-	private boolean atributoEsIgualAValor(String atributo, String valor) {
-		if (!valor.isEmpty() && !atributo.equalsIgnoreCase(valor)) {
-			return true;
-		}
-		return false;
-	}
-
-	private boolean atributoContieneValor(String atributo, String valor) {
-		if (!valor.isEmpty() && !atributo.toUpperCase().contains(valor.toUpperCase())) {
-			return true;
-		}
-		return false;
-	}
-
-	private boolean atributoComienzaConValor(Integer atributo, String valor) {
-		if (!valor.isEmpty() && !String.valueOf(atributo).startsWith(valor)) {
-			return true;
-		}
-		return false;
-	}
+//	private boolean atributoEsIgualAValor(String atributo, String valor) {
+//		if (!valor.isEmpty() && !atributo.equalsIgnoreCase(valor)) {
+//			return true;
+//		}
+//		return false;
+//	}
+//
+//	private boolean atributoContieneValor(String atributo, String valor) {
+//		if (!valor.isEmpty() && !atributo.toUpperCase().contains(valor.toUpperCase())) {
+//			return true;
+//		}
+//		return false;
+//	}
+//
+//	private boolean atributoComienzaConValor(Integer atributo, String valor) {
+//		if (!valor.isEmpty() && !String.valueOf(atributo).startsWith(valor)) {
+//			return true;
+//		}
+//		return false;
+//	}
 }
