@@ -19,22 +19,33 @@ import service.LibroService;
 class ABMInterfaz extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private LibroService libroService;
-	private JTextField txfIsbn;
-	private JTextField txfTitulo;
-	private JTextField txfAutor;
-	private JTextField txfEditorial;
-	private JTextField txfEdicion;
-	private JTextField txfAnioPublicion;
-	private JTable tabla;
-	private TableModel tablaModel;
-	private String[] columnas = { "ISBN", "Titulo", "Autor", "Editorial", "Edicion", "Año publicacion" };
-	private JButton btnNuevo;
-	private JButton btnEliminar;
-	private JButton btnModificar;
+	private static final int ISBN = 0;
+	private static final int TITULO = 1;
+	private static final int AUTOR = 2;
+	private static final int EDITORIAL = 3;
+	private static final int EDICION = 4;
+	private static final int ANIO_PUBLICACION = 5;
+	private static final int COLUMNAS = 6;
+	private static final String[] ROTULOS = { "ISBN", "Titulo", "Autor", "Editorial", "Edicion", "Año publicacion" };
+	
 	private JButton btnBuscar;
+	private JButton btnAgregar;
 	private JButton btnLimpiar;
 	private JButton btnOrdenar;
+	private JButton btnEliminar;
+	private JButton btnModificar;
+	private JButton btnListar;
+	
+	private JTextField txfIsbn;
+	private JTextField txfAutor;
+	private JTextField txfTitulo;
+	private JTextField txfEdicion;
+	private JTextField txfEditorial;
+	private JTextField txfAnioPublicion;
+	
+	private JTable tabla;
+	private TableModel tablaModel;
+	private LibroService libroService;
 
 	ABMInterfaz() {
 		libroService = LibroService.obtenerSingletonInstance();
@@ -52,30 +63,50 @@ class ABMInterfaz extends JFrame {
 		scrollPane.setBounds(12, 108, 874, 324);
 		getContentPane().add(scrollPane);
 
-		tablaModel = new DefaultTableModel(null, columnas);
+		tablaModel = new DefaultTableModel(null, ROTULOS);
 		tabla = new JTable(tablaModel);
 		tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(tabla);
+		
+		JLabel lblIsbn = new JLabel("ISBN");
+		lblIsbn.setBounds(12, 54, 70, 15);
+		getContentPane().add(lblIsbn);
 
 		txfIsbn = new JTextField();
 		txfIsbn.setBounds(12, 71, 105, 25);
 		getContentPane().add(txfIsbn);
 		txfIsbn.setColumns(10);
+		
+		JLabel lblTitulo = new JLabel("Titulo");
+		lblTitulo.setBounds(124, 54, 78, 15);
+		getContentPane().add(lblTitulo);
 
 		txfTitulo = new JTextField();
 		txfTitulo.setColumns(10);
 		txfTitulo.setBounds(124, 71, 105, 25);
 		getContentPane().add(txfTitulo);
+		
+		JLabel lblAutor = new JLabel("Autor");
+		lblAutor.setBounds(238, 54, 70, 15);
+		getContentPane().add(lblAutor);
 
 		txfAutor = new JTextField();
 		txfAutor.setColumns(10);
 		txfAutor.setBounds(231, 71, 105, 25);
 		getContentPane().add(txfAutor);
+		
+		JLabel lblEditorial = new JLabel("Editorial");
+		lblEditorial.setBounds(345, 54, 70, 15);
+		getContentPane().add(lblEditorial);
 
 		txfEditorial = new JTextField();
 		txfEditorial.setColumns(10);
 		txfEditorial.setBounds(348, 71, 105, 25);
 		getContentPane().add(txfEditorial);
+		
+		JLabel lblEdicion = new JLabel("Edicion");
+		lblEdicion.setBounds(457, 54, 70, 15);
+		getContentPane().add(lblEdicion);
 
 		txfEdicion = new JTextField();
 		txfEdicion.setColumns(10);
@@ -87,34 +118,18 @@ class ABMInterfaz extends JFrame {
 		txfAnioPublicion.setBounds(569, 71, 105, 25);
 		getContentPane().add(txfAnioPublicion);
 
-		JLabel lblIsbn = new JLabel("ISBN");
-		lblIsbn.setBounds(12, 54, 70, 15);
-		getContentPane().add(lblIsbn);
-
-		JLabel lblNombre = new JLabel("Titulo");
-		lblNombre.setBounds(124, 54, 78, 15);
-		getContentPane().add(lblNombre);
-
-		JLabel lblEdicion = new JLabel("Autor");
-		lblEdicion.setBounds(238, 54, 70, 15);
-		getContentPane().add(lblEdicion);
-
-		JLabel lblEditorial = new JLabel("Editorial");
-		lblEditorial.setBounds(345, 54, 70, 15);
-		getContentPane().add(lblEditorial);
-
-		JLabel label_1 = new JLabel("Edicion");
-		label_1.setBounds(457, 54, 70, 15);
-		getContentPane().add(label_1);
-
 		JLabel lblAoPublicacion = new JLabel("Año public.");
 		lblAoPublicacion.setBounds(569, 54, 94, 15);
 		getContentPane().add(lblAoPublicacion);
 
-		btnNuevo = new JButton("Nuevo");
-		btnNuevo.setBounds(694, 34, 192, 25);
-		getContentPane().add(btnNuevo);
+		btnAgregar = new JButton("Agregar");
+		btnAgregar.setBounds(694, 34, 192, 25);
+		getContentPane().add(btnAgregar);
 
+		btnListar = new JButton("Listar");
+		btnListar.setBounds(442, 444, 100, 25);
+		getContentPane().add(btnListar);
+		
 		btnOrdenar = new JButton("Ordenar");
 		btnOrdenar.setBounds(551, 444, 100, 25);
 		getContentPane().add(btnOrdenar);
@@ -135,8 +150,18 @@ class ABMInterfaz extends JFrame {
 		btnLimpiar.setBounds(792, 71, 94, 25);
 		getContentPane().add(btnLimpiar);
 	}
+	
+	private void especificarListeners() {
+		btnBuscar.addActionListener(e -> buscar());
+		btnListar.addActionListener(e -> listar());
+		btnLimpiar.addActionListener(e -> limpiar());
+		btnOrdenar.addActionListener(e -> ordenar());
+		btnAgregar.addActionListener(e -> agregar());
+		btnEliminar.addActionListener(e -> eliminar());
+		btnModificar.addActionListener(e -> modificar());
+	}
 
-	void buscarLibros() {
+	void buscar() {
 		String isbn = txfIsbn.getText();
 		String titulo = txfTitulo.getText();
 		String autor = txfAutor.getText();
@@ -144,53 +169,51 @@ class ABMInterfaz extends JFrame {
 		String edicion = txfEdicion.getText();
 		String anioPublicacion = txfAnioPublicion.getText();
 
-		List<Libro> libros = libroService.obtenerLibroConFiltro(isbn, titulo, autor, editorial, edicion,
-				anioPublicacion);
+		List<Libro> libros = libroService.obtenerLibroConFiltro(isbn, titulo, autor, editorial, edicion, anioPublicacion);
 
-		tablaModel = new DefaultTableModel(obtenerLibrosToModel(libros), columnas);
-
+		tablaModel = new DefaultTableModel(obtenerLibrosToModel(libros), ROTULOS);
 		tabla.setModel(tablaModel);
 	}
 
-	private void ordenarLibros() {
+	private void ordenar() {
 
-		tablaModel = new DefaultTableModel(obtenerLibrosToModel(libroService.ordenar()), columnas);
+		tablaModel = new DefaultTableModel(obtenerLibrosToModel(libroService.ordenar()), ROTULOS);
 		tabla.setModel(tablaModel);
 	}
 
-	private Object[][] obtenerLibrosToModel(List<Libro> libros) {
-		String[][] filas = new String[libros.size()][6];
-		int i = 0;
-		for (Libro libro : libros)
-			filas[i++] = libro.obtenerFormatoFila();
-
-		return filas;
-	}
-
-	private void especificarListeners() {
-		btnBuscar.addActionListener(e -> buscarLibros());
-		btnLimpiar.addActionListener(e -> limpiar());
-		btnNuevo.addActionListener(e -> nuevoLibro());
-		btnModificar.addActionListener(e -> modificar());
-		btnOrdenar.addActionListener(e -> ordenarLibros());
-		btnEliminar.addActionListener(e -> eliminar());
-	}
-
-	private void nuevoLibro() {
+	private void agregar() {
 		new NuevoLibroInterfaz(this);
 	}
 
 	private void eliminar() {
-		if (tabla.getSelectedRow() == -1)
+		int libroSeleccionado = tabla.getSelectedRow();
+		
+		if ( libroSeleccionado == -1)
 			JOptionPane.showMessageDialog(null, "Debe seleccionar un libro.");
 		else
 			try {
-				String isbn = String.valueOf(tabla.getModel().getValueAt(tabla.getSelectedRow(), 0));
-				libroService.eliminar(isbn);
-				buscarLibros();
+				String isbn = tabla.getModel().getValueAt(libroSeleccionado, 0).toString();
+				
+				tablaModel = new DefaultTableModel(obtenerLibrosToModel(libroService.eliminar(isbn)), ROTULOS);
+				tabla.setModel(tablaModel);
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(null, "No se pudo eliminar correctamente.");
 			}
+	}
+	
+	private void listar() {
+		
+		tablaModel = new DefaultTableModel(obtenerLibrosToModel(libroService.obtenerLibros()), ROTULOS);
+		tabla.setModel(tablaModel);
+	}
+	
+	private Object[][] obtenerLibrosToModel(List<Libro> libros) {
+		String[][] filas = new String[libros.size()][COLUMNAS];
+		int i = 0;
+		for (Libro libro : libros)
+			filas[i++] = libro.enFormatoFila();
+		
+		return filas;
 	}
 
 	private void limpiar() {
@@ -203,18 +226,23 @@ class ABMInterfaz extends JFrame {
 	}
 
 	private void modificar() {
-		if (tabla.getSelectedRow() == -1)
+		int libroSeleccionado = tabla.getSelectedRow();
+		
+		if ( libroSeleccionado == -1)
 			JOptionPane.showMessageDialog(null, "Debe seleccionar un libro.");
 		else
 			try {
-				int row = tabla.getSelectedRow();
-				Libro aModificar = new Libro((String) tabla.getValueAt(row, 0), (String) tabla.getValueAt(row, 1),
-						(String) tabla.getValueAt(row, 2), (String) tabla.getValueAt(row, 3),
-						Integer.parseInt((String) tabla.getValueAt(row, 4)),
-						Integer.parseInt((String) tabla.getValueAt(row, 5)));
+				String isbn = tabla.getValueAt(libroSeleccionado, ISBN).toString();
+				String titulo = tabla.getValueAt(libroSeleccionado, TITULO).toString();
+				String autor = tabla.getValueAt(libroSeleccionado, AUTOR).toString();
+				String editorial = tabla.getValueAt(libroSeleccionado, EDITORIAL).toString();
+				Integer edicion = Integer.parseInt(tabla.getValueAt(libroSeleccionado, EDICION).toString());
+				Integer anioPublicacion = Integer.parseInt(tabla.getValueAt(libroSeleccionado, ANIO_PUBLICACION).toString());
+				
+				Libro aModificar = new Libro(isbn, titulo, autor, editorial, edicion, anioPublicacion);
 
 				new ModificarLibroInterfaz(aModificar, this);
-				buscarLibros();
+				buscar();
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(null, "No se pudo eliminar correctamente.");
 			}

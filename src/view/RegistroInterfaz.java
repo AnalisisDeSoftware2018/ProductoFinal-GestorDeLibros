@@ -10,8 +10,6 @@ import service.UsuarioService;
 
 import javax.swing.JButton;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
 
 class RegistroInterfaz {
@@ -58,26 +56,7 @@ class RegistroInterfaz {
 		frame.getContentPane().add(passwordField);
 		
 		JButton btnConfirmar = new JButton("Confirmar");
-		btnConfirmar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				String user = userField.getText();
-				String pass = new String(passwordField.getPassword());
-				
-				if(user.isEmpty() || pass.isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Complete los campos por favor", "", JOptionPane.ERROR_MESSAGE);
-				} else {
-					Usuario usuario = new Usuario(userField.getText(), new String(passwordField.getPassword()));
-					
-					if(!usuarioService.registrarUsuario(usuario)) {
-						JOptionPane.showMessageDialog(null, "El usuario ya existe", "", JOptionPane.ERROR_MESSAGE);
-					} else {
-						JOptionPane.showMessageDialog(null, "Usuario registrado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
-						frame.dispose();
-					}
-				}
-				
-			}
-		});
+		btnConfirmar.addActionListener(e -> registrar()); 
 		btnConfirmar.setBounds(74, 92, 103, 23);
 		frame.getContentPane().add(btnConfirmar);
 		
@@ -85,4 +64,22 @@ class RegistroInterfaz {
 		
 	}
 
+	private void registrar() {
+		String user = userField.getText();
+		String pass = new String(passwordField.getPassword());
+		
+		if(user.isEmpty() || pass.isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Complete los campos por favor", "", JOptionPane.ERROR_MESSAGE);
+		} else {
+			Usuario usuario = new Usuario(userField.getText(), new String(passwordField.getPassword()));
+			
+			if(!usuarioService.registrarUsuario(usuario)) {
+				JOptionPane.showMessageDialog(null, "El usuario ya existe", "", JOptionPane.ERROR_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(null, "Usuario registrado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
+				frame.dispose();
+			}
+		}
+		
+	}
 }

@@ -42,8 +42,14 @@ public class LibroDao {
 			Scanner sc = new Scanner(new File("Libros.txt"));
 			while (sc.hasNextLine()) {
 				String[] atributos = sc.nextLine().split(SEPARADOR);
-				libros.add(new Libro(atributos[0], atributos[1], atributos[2], atributos[3],
-						Integer.parseInt(atributos[4]), Integer.parseInt(atributos[5])));
+				String isbn = atributos[0];
+				String titulo = atributos[1];
+				String autor = atributos[2];
+				String editorial = atributos[3];
+				Integer edicion = Integer.parseInt(atributos[4]);
+				Integer anioPublicacion = Integer.parseInt(atributos[5]);
+				
+				libros.add(new Libro(isbn, titulo, autor, editorial, edicion, anioPublicacion));
 			}
 			sc.close();
 		} catch (FileNotFoundException evento) {
@@ -71,8 +77,7 @@ public class LibroDao {
 		if(libroValido(libro)) {
 			try {
 				out = new BufferedWriter(new FileWriter("Libros.txt", true));
-				out.write(libro.obtenerISBN() + SEPARADOR + libro.obtenerTitulo() + SEPARADOR + libro.obtenerAutor() + SEPARADOR 
-							+ libro.obtenerEditorial() + SEPARADOR + libro.obtenerEdicion() + SEPARADOR + libro.obtenerAnioPublicacion() + '\n');
+				out.write(libro.enFormatoRegistro(SEPARADOR));
 				out.close();
 				
 				return true;
@@ -87,28 +92,29 @@ public class LibroDao {
 	public List<Libro> ordenar() {
 		List<Libro> libros = obtenerLibros();
 		libros.sort(new Libro());
-        escribirTXT(libros);
+        escribirArchivo(libros);
 
         return libros;
 	}
 
-    public void eliminar(String isbn) {
+    public List<Libro> eliminar(String isbn) {
 		List<Libro> libros = obtenerLibros();
 		libros.remove(new Libro(isbn,null,null,null,null,null));
-        escribirTXT(libros);
+        escribirArchivo(libros);
+        
+		return libros;
     }
 
-    private void escribirTXT(List<Libro> libros) {
+    private void escribirArchivo(List<Libro> libros) {
         FileWriter fw;
         PrintWriter pw;
         try {
             fw = new FileWriter("Libros.txt");
             pw = new PrintWriter(fw);
-            for (Libro libro : libros) {
-                pw.println(libro.obtenerISBN() + SEPARADOR + libro.obtenerTitulo() + SEPARADOR + libro.obtenerAutor() + SEPARADOR
-                        + libro.obtenerEditorial() + SEPARADOR + libro.obtenerEdicion() + SEPARADOR
-                        + libro.obtenerAnioPublicacion());
-            }
+            
+            for (Libro libro : libros)
+            	pw.print(libro.enFormatoRegistro(SEPARADOR));
+            
             fw.close();
             pw.close();
         } catch (IOException evento) {
@@ -123,14 +129,30 @@ public class LibroDao {
 		
 		lista = dao.obtenerLibros();
 		
-		for (Libro libro : lista) {
-			System.out.println(Arrays.toString(libro.obtenerFormatoFila()));
-		}
+		for (Libro libro : lista)
+			System.out.println(Arrays.toString(libro.enFormatoFila()));
+		
+		System.out.println();
+		
+		lista = dao.eliminar("10");
+		
+		for (Libro libro : lista)
+			System.out.println(Arrays.toString(libro.enFormatoFila()));
+
+		System.out.println();
+
+		dao.guardar(new Libro("10","Programacion","Elias Garcia","Puerto de palos",2018,1745));
+		
+		lista = dao.obtenerLibros();
+		
+		for (Libro libro : lista)
+			System.out.println(Arrays.toString(libro.enFormatoFila()));
+
+		System.out.println();
 		
 		lista = dao.ordenar();
 		
-		for (Libro libro : lista) {
-			System.out.println(Arrays.toString(libro.obtenerFormatoFila()));
-		}
+		for (Libro libro : lista)
+			System.out.println(Arrays.toString(libro.enFormatoFila()));
 	}
 }

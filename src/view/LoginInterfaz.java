@@ -69,24 +69,7 @@ public class LoginInterfaz {
 		userField.setColumns(10);
 		
 		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.addActionListener(e -> {
-			String user1 = userField.getText();
-			String pass1 = new String(passwordField.getPassword());
-
-			if(user1.isEmpty() || pass1.isEmpty()) {
-				JOptionPane.showMessageDialog(null, "Complete los campos por favor", "", JOptionPane.ERROR_MESSAGE);
-			} else {
-				Usuario usuario = new Usuario(user1, pass1);
-
-				if(usuarioService.loginValido(usuario)) {
-					new ABMInterfaz().setVisible(true);
-					frame.dispose();
-				} else {
-					JOptionPane.showMessageDialog(null, "Usuario no valido", "", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-
-		});
+		btnAceptar.addActionListener(e -> logearse());
 		btnAceptar.setBounds(309, 29, 89, 23);
 		frame.getContentPane().add(btnAceptar);
 		
@@ -103,5 +86,24 @@ public class LoginInterfaz {
 		passwordField = new JPasswordField();
 		passwordField.setBounds(130, 61, 126, 20);
 		frame.getContentPane().add(passwordField);
+	}
+	
+	private void logearse(){
+		String user = userField.getText();
+		String pass = new String(passwordField.getPassword());
+
+		if(user.isEmpty() || pass.isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Complete los campos por favor", "", JOptionPane.ERROR_MESSAGE);
+		} else {
+			Usuario usuario = new Usuario(user, pass);
+
+			if(usuarioService.loginValido(usuario)) {
+				new ABMInterfaz().setVisible(true);
+				frame.dispose();
+			} else {
+				JOptionPane.showMessageDialog(null, "Usuario no valido", "", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+
 	}
 }
