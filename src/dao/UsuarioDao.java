@@ -20,15 +20,12 @@ public class UsuarioDao {
 	}
 
 	public static UsuarioDao getSingletonInstance() {
-		if (instancia == null) {
-			return new UsuarioDao();
-		}
-		return instancia;
+		return instancia != null ? instancia : new UsuarioDao(); 
 	}
 	
 	public boolean usuarioValido(Usuario user) {
 		
-		Usuario userIngresado = new Usuario(user.getUser(), BCrypt.hashpw(user.getPass(), BCrypt.gensalt(4)));
+		Usuario userIngresado = new Usuario(user.obtenerUser(), BCrypt.hashpw(user.obtenerPass(), BCrypt.gensalt(4)));
 		List<Usuario> usuarios = new ArrayList<>();
 
 		cargarUsuarios(usuarios);
@@ -49,8 +46,8 @@ public class UsuarioDao {
 		cargarUsuarios(usuarios);
 
 		for(Usuario userSeguro : usuarios) {
-			if(userSeguro.getUser().equals(user.getUser())) {
-				if(BCrypt.checkpw(user.getPass(), userSeguro.getPass())) {
+			if(userSeguro.obtenerUser().equals(user.obtenerUser())) {
+				if(BCrypt.checkpw(user.obtenerPass(), userSeguro.obtenerPass())) {
 					return true;
 				}
 			}
@@ -75,13 +72,13 @@ public class UsuarioDao {
 
 	public boolean generarUsuario(Usuario user) {
 		
-		Usuario userIngresado = new Usuario(user.getUser(), BCrypt.hashpw(user.getPass(), BCrypt.gensalt(4)));
+		Usuario userIngresado = new Usuario(user.obtenerUser(), BCrypt.hashpw(user.obtenerPass(), BCrypt.gensalt(4)));
 		BufferedWriter out;
 		
 		if(usuarioValido(userIngresado)) {
 			try {
 				out = new BufferedWriter(new FileWriter("Usuarios.txt", true));
-				out.write(userIngresado.getUser() + SEPARADOR + userIngresado.getPass() + '\n');
+				out.write(userIngresado.obtenerUser() + SEPARADOR + userIngresado.obtenerPass() + '\n');
 				out.close();
 				
 				return true;

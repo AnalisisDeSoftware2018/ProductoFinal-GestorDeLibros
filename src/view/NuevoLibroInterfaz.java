@@ -14,12 +14,12 @@ import service.LibroService;
 class NuevoLibroInterfaz {
 
 	private JFrame frame;
-	private JTextField txtIsbn;
-	private JTextField txtTitulo;
-	private JTextField txtAutor;
-	private JTextField txtEditorial;
-	private JTextField txtEdicin;
-	private JTextField txtAoPublicacin;
+	private JTextField txfISBN;
+	private JTextField txfTitulo;
+	private JTextField txfAutor;
+	private JTextField txfEditorial;
+	private JTextField txfEdicion;
+	private JTextField txfAnioPublicacion;
 	private LibroService libroService;
 	private ABMInterfaz abmInterfaz;
 
@@ -45,11 +45,11 @@ class NuevoLibroInterfaz {
 		lblCompleteLosCampos.setBounds(10, 11, 209, 14);
 		frame.getContentPane().add(lblCompleteLosCampos);
 		
-		txtIsbn = new JTextField();
-		txtIsbn.setToolTipText("");
-		txtIsbn.setBounds(10, 61, 113, 20);
-		frame.getContentPane().add(txtIsbn);
-		txtIsbn.setColumns(10);
+		txfISBN = new JTextField();
+		txfISBN.setToolTipText("");
+		txfISBN.setBounds(10, 61, 113, 20);
+		frame.getContentPane().add(txfISBN);
+		txfISBN.setColumns(10);
 		
 		JLabel lblIsbn = new JLabel("ISBN:");
 		lblIsbn.setBounds(10, 36, 113, 14);
@@ -59,73 +59,90 @@ class NuevoLibroInterfaz {
 		lblTtulo.setBounds(10, 92, 113, 14);
 		frame.getContentPane().add(lblTtulo);
 		
-		txtTitulo = new JTextField();
-		txtTitulo.setBounds(10, 117, 113, 20);
-		frame.getContentPane().add(txtTitulo);
-		txtTitulo.setColumns(10);
+		txfTitulo = new JTextField();
+		txfTitulo.setBounds(10, 117, 113, 20);
+		frame.getContentPane().add(txfTitulo);
+		txfTitulo.setColumns(10);
 		
 		JLabel lblAutor = new JLabel("Autor:");
 		lblAutor.setBounds(10, 148, 113, 14);
 		frame.getContentPane().add(lblAutor);
 		
-		txtAutor = new JTextField();
-		txtAutor.setBounds(10, 173, 113, 20);
-		frame.getContentPane().add(txtAutor);
-		txtAutor.setColumns(10);
+		txfAutor = new JTextField();
+		txfAutor.setBounds(10, 173, 113, 20);
+		frame.getContentPane().add(txfAutor);
+		txfAutor.setColumns(10);
 		
 		JLabel lblEditorial = new JLabel("Editorial:");
 		lblEditorial.setBounds(217, 36, 113, 14);
 		frame.getContentPane().add(lblEditorial);
 		
-		txtEditorial = new JTextField();
-		txtEditorial.setBounds(217, 61, 113, 20);
-		frame.getContentPane().add(txtEditorial);
-		txtEditorial.setColumns(10);
+		txfEditorial = new JTextField();
+		txfEditorial.setBounds(217, 61, 113, 20);
+		frame.getContentPane().add(txfEditorial);
+		txfEditorial.setColumns(10);
 		
-		JLabel lblEdicin = new JLabel("Edición:");
-		lblEdicin.setBounds(217, 92, 113, 14);
-		frame.getContentPane().add(lblEdicin);
+		JLabel lblEdicion = new JLabel("Edición:");
+		lblEdicion.setBounds(217, 92, 113, 14);
+		frame.getContentPane().add(lblEdicion);
 		
-		txtEdicin = new JTextField();
-		txtEdicin.setBounds(217, 117, 113, 20);
-		frame.getContentPane().add(txtEdicin);
-		txtEdicin.setColumns(10);
+		txfEdicion = new JTextField();
+		txfEdicion.setBounds(217, 117, 113, 20);
+		frame.getContentPane().add(txfEdicion);
+		txfEdicion.setColumns(10);
 		
-		JLabel lblAoPublicacin = new JLabel("Año publicación:");
-		lblAoPublicacin.setBounds(217, 148, 113, 14);
-		frame.getContentPane().add(lblAoPublicacin);
+		JLabel lblAnioPublicacion = new JLabel("Año publicación:");
+		lblAnioPublicacion.setBounds(217, 148, 113, 14);
+		frame.getContentPane().add(lblAnioPublicacion);
 		
-		txtAoPublicacin = new JTextField();
-		txtAoPublicacin.setBounds(217, 173, 113, 20);
-		frame.getContentPane().add(txtAoPublicacin);
-		txtAoPublicacin.setColumns(10);
+		txfAnioPublicacion = new JTextField();
+		txfAnioPublicacion.setBounds(217, 173, 113, 20);
+		frame.getContentPane().add(txfAnioPublicacion);
+		txfAnioPublicacion.setColumns(10);
 		
 		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.addActionListener(arg0 -> {
-
-			if(txtIsbn.getText().isEmpty() || txtAutor.getText().isEmpty() || txtTitulo.getText().isEmpty()
-					|| txtAoPublicacin.getText().isEmpty() || txtEditorial.getText().isEmpty() || txtEdicin.getText().isEmpty()) {
-				JOptionPane.showMessageDialog(null, "Complete los campos por favor", "", JOptionPane.ERROR_MESSAGE);
-			} else {
-				Libro nuevo = new Libro(txtIsbn.getText(), txtTitulo.getText(), txtAutor.getText(), txtEditorial.getText(), Integer.parseInt(txtEdicin.getText()), Integer.parseInt(txtAoPublicacin.getText()));
-
-				if(libroService.guardar(nuevo)) {
-					abmInterfaz.buscarLibros();
-					JOptionPane.showMessageDialog(null, "Libro guardado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
-					frame.dispose();
-				} else {
-					JOptionPane.showMessageDialog(null, "No se pudo guardar el libro nuevo", "", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		});
+		btnAceptar.addActionListener(e -> agregar());
 		btnAceptar.setBounds(65, 210, 89, 23);
 		frame.getContentPane().add(btnAceptar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.addActionListener(arg0 -> frame.dispose());
+		btnCancelar.addActionListener(e -> frame.dispose());
 		btnCancelar.setBounds(188, 210, 89, 23);
 		frame.getContentPane().add(btnCancelar);
 		
 		frame.setVisible(true);
+	}
+	
+	private void agregar() {
+
+		if(campoVacio()) {
+			JOptionPane.showMessageDialog(null, "Complete los campos por favor", "", JOptionPane.ERROR_MESSAGE);
+		} else {
+			String isbn = txfISBN.getText();
+			String titulo = txfTitulo.getText(); 
+			String autor = txfAutor.getText();
+			String editorial = txfEditorial.getText();
+			Integer edicion = Integer.parseInt(txfEdicion.getText());
+			Integer anioPublicacion = Integer.parseInt(txfAnioPublicacion.getText());
+			
+			Libro nuevo = new Libro(isbn, titulo, autor, editorial, edicion, anioPublicacion);
+
+			if(libroService.guardar(nuevo)) {
+				abmInterfaz.buscar();
+				JOptionPane.showMessageDialog(null, "Libro guardado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
+				frame.dispose();
+			} else {
+				JOptionPane.showMessageDialog(null, "No se pudo guardar el libro nuevo", "", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+	
+	private boolean campoVacio() {
+		return  txfISBN.getText().isEmpty() 			||
+				txfAutor.getText().isEmpty() 			||
+				txfTitulo.getText().isEmpty() 			||
+				txfAnioPublicacion.getText().isEmpty()	||
+				txfEditorial.getText().isEmpty() 		||
+				txfEdicion.getText().isEmpty();
 	}
 }

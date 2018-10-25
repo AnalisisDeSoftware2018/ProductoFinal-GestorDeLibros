@@ -13,10 +13,7 @@ public class UsuarioService {
 	} 
 
 	public static UsuarioService getSingletonInstance() {
-		if (instancia == null) {
-			return new UsuarioService();
-		}
-		return instancia;
+		return instancia != null ? instancia : new UsuarioService();
 	}
 	
 	public boolean usuarioValido(Usuario user) {

@@ -10,17 +10,20 @@ public class Usuario {
 		this.pass = pass; 
 	}
 	
-	public String getUser() {
-		return user;
-	}
-	public void setUser(String user) {
+	public void especificarUser(String user) {
 		this.user = user;
 	}
-	public String getPass() {
-		return pass;
-	}
-	public void setPass(String pass) {
+	
+	public void especificarPass(String pass) {
 		this.pass = pass;
+	}
+	
+	public String obtenerUser() {
+		return user;
+	}
+	
+	public String obtenerPass() {
+		return pass;
 	}
 
 	@Override
@@ -33,18 +36,18 @@ public class Usuario {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) return true;
+		
+		if (obj == null) return false;
+		
+		if (getClass() != obj.getClass()) return false;
+		
 		Usuario other = (Usuario) obj;
+		
 		if (user == null) {
-			if (other.user != null)
-				return false;
-		} else if (!user.equals(other.user))
-			return false;
+			if (other.user != null) return false;
+		} else if (!user.equals(other.user)) return false;
+		
 		return true;
 	}
 
