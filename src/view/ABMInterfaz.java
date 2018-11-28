@@ -15,6 +15,8 @@ import javax.swing.table.TableModel;
 
 import model.Libro;
 import service.LibroService;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 class ABMInterfaz extends JFrame {
 
@@ -48,6 +50,12 @@ class ABMInterfaz extends JFrame {
 	private LibroService libroService;
 
 	ABMInterfaz() {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				libroService.backup();
+			}
+		});
 		libroService = LibroService.obtenerSingletonInstance();
 		especificarComponents();
 		especificarListeners();

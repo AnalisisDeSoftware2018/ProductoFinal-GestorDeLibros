@@ -6,21 +6,26 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-
 import model.Libro;
 
 public class LibroDao {
 
 	private static LibroDao instancia;
 	private final static String SEPARADOR = "&&";
+	private String path;
+	private String decodedPath;
 
 	private LibroDao() {
+		getPath();
 	}
 
 	public static LibroDao obtenerSingletonInstance() {
@@ -39,7 +44,7 @@ public class LibroDao {
 	public List<Libro> obtenerLibros() {
 		List<Libro> libros = new ArrayList<>();
 		try {
-			Scanner sc = new Scanner(new File("Libros.txt"));
+			Scanner sc = new Scanner(new File(decodedPath + "\\Libros.txt"));
 			while (sc.hasNextLine()) {
 				String[] atributos = sc.nextLine().split(SEPARADOR);
 				String isbn = atributos[0];
@@ -76,7 +81,7 @@ public class LibroDao {
 		
 		if(libroValido(libro)) {
 			try {
-				out = new BufferedWriter(new FileWriter("Libros.txt", true));
+				out = new BufferedWriter(new FileWriter(decodedPath + "\\Libros.txt", true));
 				out.write(libro.enFormatoRegistro(SEPARADOR));
 				out.close();
 				
@@ -105,11 +110,21 @@ public class LibroDao {
 		return libros;
     }
 
+    public void backup() {
+    	List<Libro> libros = obtenerLibros();
+    	escribirArchivo(libros);
+    }
+    
     private void escribirArchivo(List<Libro> libros) {
         FileWriter fw;
         PrintWriter pw;
+        File fi;
+        
         try {
-            fw = new FileWriter("Libros.txt");
+        	fi = new File(decodedPath + "\\Libros.txt");
+        	fi.mkdirs();
+        	fi.createNewFile();
+            fw = new FileWriter(fi);
             pw = new PrintWriter(fw);
             
             for (Libro libro : libros)
@@ -121,6 +136,20 @@ public class LibroDao {
             JOptionPane.showMessageDialog(null, evento.getMessage());
         }
     }
+    
+	private void getPath() {
+		path = new JFileChooser().getFileSystemView().getDefaultDirectory().toString() + "\\Gestor de Libros";
+		try {
+			decodedPath = URLDecoder.decode(path, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		File fi = new File(decodedPath);
+		if(!fi.exists()) {
+			fi.mkdir();
+		}
+	}
 
 	public static void main(String[] args) {
 		LibroDao dao = new LibroDao();
@@ -141,7 +170,7 @@ public class LibroDao {
 
 		System.out.println();
 
-		dao.guardar(new Libro("10","Programacion","Elias Garcia","Puerto de palos",2018,1745));
+		//dao.guardar(new Libro("10","Programacion","Elias Garcia","Puerto de palos",2018,1745));
 		
 		lista = dao.obtenerLibros();
 		

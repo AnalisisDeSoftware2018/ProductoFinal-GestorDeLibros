@@ -80,6 +80,10 @@ public class LibroService {
 		
 		return coincidencia;
 	}
+	
+	public void backup() {
+		libroDao.backup();
+	}
 
 //	private boolean atributoEsIgualAValor(String atributo, String valor) {
 //		if (!valor.isEmpty() && !atributo.equalsIgnoreCase(valor)) {
