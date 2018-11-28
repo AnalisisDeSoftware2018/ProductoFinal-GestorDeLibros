@@ -39,11 +39,11 @@ class RegistroInterfaz {
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		JLabel lblUsuario = new JLabel("Usuario:");
-		lblUsuario.setBounds(10, 26, 82, 14);
+		lblUsuario.setBounds(10, 23, 82, 20);
 		frame.getContentPane().add(lblUsuario);
 		
 		JLabel lblPass = new JLabel("Contraseña:");
-		lblPass.setBounds(10, 58, 82, 14);
+		lblPass.setBounds(10, 58, 82, 20);
 		frame.getContentPane().add(lblPass);
 		
 		userField = new JTextField();
@@ -52,7 +52,7 @@ class RegistroInterfaz {
 		userField.setColumns(10);
 		
 		passwordField = new JPasswordField();
-		passwordField.setBounds(102, 55, 113, 20);
+		passwordField.setBounds(102, 58, 113, 20);
 		frame.getContentPane().add(passwordField);
 		
 		JButton btnConfirmar = new JButton("Confirmar");

@@ -10,10 +10,13 @@ import service.LibroService;
 
 import java.awt.Font;
 import javax.swing.JButton;
+import javax.swing.SwingConstants;
+import java.awt.Color;
 
 class ModificarLibroInterfaz {
 
 	private JFrame frame;
+	private JLabel lblMensajeDeError;
 	private JTextField txfISBN;
 	private JTextField txfTitulo;
 	private JTextField txfAutor;
@@ -49,7 +52,7 @@ class ModificarLibroInterfaz {
 		
 		txfISBN = new JTextField();
 		txfISBN.setToolTipText("");
-		txfISBN.setBounds(10, 61, anchoCampo, 20);
+		txfISBN.setBounds(10, 50, anchoCampo, 20);
 		txfISBN.setText(libro.obtenerISBN());
 		frame.getContentPane().add(txfISBN);
 		txfISBN.setColumns(10);
@@ -59,21 +62,21 @@ class ModificarLibroInterfaz {
 		frame.getContentPane().add(lblIsbn);
 		
 		JLabel lblTtulo = new JLabel("Título:");
-		lblTtulo.setBounds(10, 92, anchoCampo, 14);
+		lblTtulo.setBounds(10, 81, anchoCampo, 14);
 		frame.getContentPane().add(lblTtulo);
 		
 		txfTitulo = new JTextField();
-		txfTitulo.setBounds(10, 117, anchoCampo, 20);
+		txfTitulo.setBounds(10, 95, anchoCampo, 20);
 		txfTitulo.setText(libro.obtenerTitulo());
 		frame.getContentPane().add(txfTitulo);
 		txfTitulo.setColumns(10);
 		
 		JLabel lblAutor = new JLabel("Autor:");
-		lblAutor.setBounds(10, 148, anchoCampo, 14);
+		lblAutor.setBounds(10, 126, anchoCampo, 14);
 		frame.getContentPane().add(lblAutor);
 		
 		txfAutor = new JTextField();
-		txfAutor.setBounds(10, 173, anchoCampo, 20);
+		txfAutor.setBounds(10, 140, anchoCampo, 20);
 		txfAutor.setText(libro.obtenerAutor());
 		frame.getContentPane().add(txfAutor);
 		txfAutor.setColumns(10);
@@ -83,40 +86,48 @@ class ModificarLibroInterfaz {
 		frame.getContentPane().add(lblEditorial);
 		
 		txfEditorial = new JTextField();
-		txfEditorial.setBounds(217, 61, anchoCampo, 20);
+		txfEditorial.setBounds(217, 50, anchoCampo, 20);
 		txfEditorial.setText(libro.obtenerEditorial());
 		frame.getContentPane().add(txfEditorial);
 		txfEditorial.setColumns(10);
 		
 		JLabel lblEdicin = new JLabel("Edición:");
-		lblEdicin.setBounds(217, 92, anchoCampo, 14);
+		lblEdicin.setBounds(217, 81, anchoCampo, 14);
 		frame.getContentPane().add(lblEdicin);
 		
 		txfEdicion = new JTextField();
-		txfEdicion.setBounds(217, 117, anchoCampo, 20);
+		txfEdicion.setBounds(217, 95, anchoCampo, 20);
 		txfEdicion.setText(libro.obtenerEdicion().toString());
 		frame.getContentPane().add(txfEdicion);
 		txfEdicion.setColumns(10);
 		
 		JLabel lblAoPublicacin = new JLabel("Año publicación:");
-		lblAoPublicacin.setBounds(217, 148, anchoCampo, 14);
+		lblAoPublicacin.setBounds(217, 126, anchoCampo, 14);
 		frame.getContentPane().add(lblAoPublicacin);
 		
 		txfAnioPublicacion = new JTextField();
-		txfAnioPublicacion.setBounds(217, 173, anchoCampo, 20);
+		txfAnioPublicacion.setBounds(217, 140, anchoCampo, 20);
 		txfAnioPublicacion.setText(libro.obtenerAnioPublicacion().toString());
 		frame.getContentPane().add(txfAnioPublicacion);
 		txfAnioPublicacion.setColumns(10);
 		
 		JButton btnAceptar = new JButton("Aceptar");
 		btnAceptar.addActionListener(arg0 -> modificar());
-		btnAceptar.setBounds(65, 210, 89, 23);
+		btnAceptar.setBounds(71, 196, 89, 23);
 		frame.getContentPane().add(btnAceptar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(arg0 -> frame.dispose());
-		btnCancelar.setBounds(188, 210, 89, 23);
+		btnCancelar.setBounds(217, 196, 89, 23);
 		frame.getContentPane().add(btnCancelar);
+		
+		lblMensajeDeError = new JLabel("Mensaje de error");
+		lblMensajeDeError.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblMensajeDeError.setForeground(Color.RED);
+		lblMensajeDeError.setHorizontalAlignment(SwingConstants.CENTER);
+		lblMensajeDeError.setBounds(10, 171, 374, 14);
+		lblMensajeDeError.setVisible(false);
+		frame.getContentPane().add(lblMensajeDeError);
 
 		frame.setVisible(true);
 	}
@@ -146,30 +157,40 @@ class ModificarLibroInterfaz {
 			String titulo = txfTitulo.getText(); 
 			String autor = txfAutor.getText();
 			String editorial = txfEditorial.getText();
-			Integer edicion = Integer.parseInt(txfEdicion.getText());
-			Integer anioPublicacion = Integer.parseInt(txfAnioPublicacion.getText());
+			String edicion = txfEdicion.getText();
+			String anioPublicacion = txfAnioPublicacion.getText();
 			
-			Libro nuevo = new Libro(isbn, titulo, autor, editorial, edicion, anioPublicacion);
-
-			if(viejoIsbn.equals(nuevo.obtenerISBN())) {				//estoy modificando otro campo que no es el isbn, no hay problema de insercion
-				libroService.eliminar(nuevo.obtenerISBN());
-				if(libroService.guardar(nuevo)) {
-					abmInterfaz.buscar();
-					JOptionPane.showMessageDialog(null, "Libro modificado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
-					frame.dispose();
-				} else {
-					JOptionPane.showMessageDialog(null, "No se pudo modificar el libro nuevo", "", JOptionPane.ERROR_MESSAGE);
+			Libro nuevo;
+			try {
+				nuevo = new Libro(isbn, titulo, autor, editorial, edicion, anioPublicacion);
+				
+				if(viejoIsbn.equals(nuevo.obtenerISBN())) {				//estoy modificando otro campo que no es el isbn, no hay problema de insercion
+					libroService.eliminar(nuevo.obtenerISBN());
+					if(libroService.guardar(nuevo)) {
+						abmInterfaz.buscar();
+						JOptionPane.showMessageDialog(null, "Libro modificado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
+						frame.dispose();
+					} else {
+						lblMensajeDeError.setText("No se pudo modificar el libro nuevo");
+						lblMensajeDeError.setVisible(true);
+					}
+				} else {														//si modifique el isbn, puedo tener problema de duplicados con otros libros
+					if(libroService.guardar(nuevo)) {
+						libroService.eliminar(libro.obtenerISBN());
+						abmInterfaz.buscar();
+						JOptionPane.showMessageDialog(null, "Libro modificado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
+						frame.dispose();
+					} else {
+						lblMensajeDeError.setText("No se pudo modificar el libro nuevo");
+						lblMensajeDeError.setVisible(true);
+					}
 				}
-			} else {														//si modifique el isbn, puedo tener problema de duplicados con otros libros
-				if(libroService.guardar(nuevo)) {
-					libroService.eliminar(libro.obtenerISBN());
-					abmInterfaz.buscar();
-					JOptionPane.showMessageDialog(null, "Libro modificado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
-					frame.dispose();
-				} else {
-					JOptionPane.showMessageDialog(null, "No se pudo modificar el libro nuevo", "", JOptionPane.ERROR_MESSAGE);
-				}
+			} catch (Exception e) {
+				lblMensajeDeError.setText(e.getMessage());
+				lblMensajeDeError.setVisible(true);
 			}
+
+			
 		}
 	}
 	

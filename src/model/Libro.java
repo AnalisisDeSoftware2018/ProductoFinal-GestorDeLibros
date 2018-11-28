@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Comparator;
+import java.util.regex.Pattern;
 
 public class Libro implements Comparable<Libro>, Comparator<Libro> {
 
@@ -12,15 +13,56 @@ public class Libro implements Comparable<Libro>, Comparator<Libro> {
 	private Integer anioPublicacion;
 
 	public Libro() {
+		
 	}
 
-	public Libro(String isbn, String titulo, String autor, String editorial, Integer edicion, Integer anioPublicacion) {
+	public Libro(String isbn, String titulo, String autor, String editorial, String edicion, String anioPublicacion) throws Exception{
+		
+		if( isbn.length() != 10 && isbn.length() != 13 )
+			throw new Exception("Longitud incorrecta del ISBN ");
+		
+		if( !esNumerico(isbn) )
+			throw new Exception("ISBN es un campo numérico");
+		
+		if( titulo.length() == 0 )
+			throw new Exception("Campo Título vacío");
+			
+		if( !esAlfanumerico(titulo) )
+			throw new Exception("Título es un campo alfanumérico");
+		
+		if( autor.length() == 0 )
+			throw new Exception("Campo Autor vacío");
+		
+		if( !esAlfabetico(autor) )
+			throw new Exception("Autor es un campo alfabético");
+		
+		if( editorial.length() == 0 )
+			throw new Exception("Campo Editorial vacío");
+		
+		if( !esAlfabetico(editorial) )
+			throw new Exception("Editorial es un campo alfabético");
+		
+		if( !esNumerico(edicion) )
+			throw new Exception("Edición es un campo numérico");
+		
+		if( !verificarRango(edicion, 1, 99))
+			throw new Exception("Edicion fuera del rango 1-99");
+		
+		if( edicion.length() > 2 )
+			throw new Exception("Longitud incorrecta del numero de Edicion");
+		
+		if( !esNumerico(anioPublicacion) )
+			throw new Exception("Año de publicación es un campo numérico");
+		
+		if( !verificarRango(anioPublicacion, 1900, 2018) )
+			throw new Exception("Año de publicacion fuera del rango 1900-2018");
+		
 		this.isbn = isbn;
 		this.titulo = titulo;
 		this.autor = autor;
 		this.editorial = editorial;
-		this.edicion = edicion;
-		this.anioPublicacion = anioPublicacion;
+		this.edicion = Integer.parseInt(edicion);
+		this.anioPublicacion = Integer.parseInt(anioPublicacion);
 	}
 
 	public void especificarISBN(String isbn) {
@@ -114,6 +156,22 @@ public class Libro implements Comparable<Libro>, Comparator<Libro> {
 		return true;
 	}
 
+	private boolean esNumerico(String texto) {
+		return Pattern.matches("^[0-9]+$", texto);
+	}
+	
+	private boolean esAlfabetico(String texto) {
+		return Pattern.matches("^[a-zA-ZáéíóúÁÉÍÓÚ][a-zA-Z -.,áéíóúÁÉÍÓÚ]*$", texto);
+	}
+	
+	private boolean esAlfanumerico(String texto) {
+		return Pattern.matches("[a-zA-Z0-9áéíóúÁÉÍÓÚ][a-zA-Z0-9 ,áéíóúÁÉÍÓÚ]*$", texto);
+	}
 	
 	
+	private boolean verificarRango(String texto, Integer min, Integer max) {
+		Integer numero = Integer.parseInt(texto);
+		
+		return min <= numero && numero <= max;
+	}
 }

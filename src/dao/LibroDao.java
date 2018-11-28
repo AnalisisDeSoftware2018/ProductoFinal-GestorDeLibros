@@ -2,14 +2,12 @@ package dao;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -51,13 +49,13 @@ public class LibroDao {
 				String titulo = atributos[1];
 				String autor = atributos[2];
 				String editorial = atributos[3];
-				Integer edicion = Integer.parseInt(atributos[4]);
-				Integer anioPublicacion = Integer.parseInt(atributos[5]);
+				String edicion = atributos[4];
+				String anioPublicacion = atributos[5];
 				
 				libros.add(new Libro(isbn, titulo, autor, editorial, edicion, anioPublicacion));
 			}
 			sc.close();
-		} catch (FileNotFoundException evento) {
+		} catch (Exception evento) {
 			JOptionPane.showMessageDialog(null, evento.getMessage());
 		}
 
@@ -88,6 +86,7 @@ public class LibroDao {
 				return true;
 			} catch (IOException e) {
 				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, e.getMessage());
 			}
 		}
 		
@@ -104,7 +103,11 @@ public class LibroDao {
 
     public List<Libro> eliminar(String isbn) {
 		List<Libro> libros = obtenerLibros();
-		libros.remove(new Libro(isbn,null,null,null,null,null));
+		try {
+			libros.remove(new Libro(isbn,null,null,null,null,null));
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+		}
         escribirArchivo(libros);
         
 		return libros;
@@ -151,37 +154,4 @@ public class LibroDao {
 		}
 	}
 
-	public static void main(String[] args) {
-		LibroDao dao = new LibroDao();
-		
-		List<Libro> lista;
-		
-		lista = dao.obtenerLibros();
-		
-		for (Libro libro : lista)
-			System.out.println(Arrays.toString(libro.enFormatoFila()));
-		
-		System.out.println();
-		
-		lista = dao.eliminar("10");
-		
-		for (Libro libro : lista)
-			System.out.println(Arrays.toString(libro.enFormatoFila()));
-
-		System.out.println();
-
-		//dao.guardar(new Libro("10","Programacion","Elias Garcia","Puerto de palos",2018,1745));
-		
-		lista = dao.obtenerLibros();
-		
-		for (Libro libro : lista)
-			System.out.println(Arrays.toString(libro.enFormatoFila()));
-
-		System.out.println();
-		
-		lista = dao.ordenar();
-		
-		for (Libro libro : lista)
-			System.out.println(Arrays.toString(libro.enFormatoFila()));
-	}
 }

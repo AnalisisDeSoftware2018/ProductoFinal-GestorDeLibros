@@ -10,10 +10,13 @@ import javax.swing.JTextField;
 
 import model.Libro;
 import service.LibroService;
+import java.awt.Color;
+import javax.swing.SwingConstants;
 
 class NuevoLibroInterfaz {
 
 	private JFrame frame;
+	private JLabel lblMensajeDeError;
 	private JTextField txfISBN;
 	private JTextField txfTitulo;
 	private JTextField txfAutor;
@@ -33,9 +36,10 @@ class NuevoLibroInterfaz {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		int anchoCampo = 150;
 		frame = new JFrame("Registrar nuevo libro");
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 358, 282);
+		frame.setBounds(100, 100, 400, 282);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -47,56 +51,56 @@ class NuevoLibroInterfaz {
 		
 		txfISBN = new JTextField();
 		txfISBN.setToolTipText("");
-		txfISBN.setBounds(10, 61, 113, 20);
+		txfISBN.setBounds(10, 50, anchoCampo, 20);
 		frame.getContentPane().add(txfISBN);
 		txfISBN.setColumns(10);
 		
 		JLabel lblIsbn = new JLabel("ISBN:");
-		lblIsbn.setBounds(10, 36, 113, 14);
+		lblIsbn.setBounds(10, 36, anchoCampo, 14);
 		frame.getContentPane().add(lblIsbn);
 		
 		JLabel lblTtulo = new JLabel("Título:");
-		lblTtulo.setBounds(10, 92, 113, 14);
+		lblTtulo.setBounds(10, 81, anchoCampo, 14);
 		frame.getContentPane().add(lblTtulo);
 		
 		txfTitulo = new JTextField();
-		txfTitulo.setBounds(10, 117, 113, 20);
+		txfTitulo.setBounds(10, 95, anchoCampo, 20);
 		frame.getContentPane().add(txfTitulo);
 		txfTitulo.setColumns(10);
 		
 		JLabel lblAutor = new JLabel("Autor:");
-		lblAutor.setBounds(10, 148, 113, 14);
+		lblAutor.setBounds(10, 126, anchoCampo, 14);
 		frame.getContentPane().add(lblAutor);
 		
 		txfAutor = new JTextField();
-		txfAutor.setBounds(10, 173, 113, 20);
+		txfAutor.setBounds(10, 140, anchoCampo, 20);
 		frame.getContentPane().add(txfAutor);
 		txfAutor.setColumns(10);
 		
 		JLabel lblEditorial = new JLabel("Editorial:");
-		lblEditorial.setBounds(217, 36, 113, 14);
+		lblEditorial.setBounds(217, 36, anchoCampo, 14);
 		frame.getContentPane().add(lblEditorial);
 		
 		txfEditorial = new JTextField();
-		txfEditorial.setBounds(217, 61, 113, 20);
+		txfEditorial.setBounds(217, 50, anchoCampo, 20);
 		frame.getContentPane().add(txfEditorial);
 		txfEditorial.setColumns(10);
 		
 		JLabel lblEdicion = new JLabel("Edición:");
-		lblEdicion.setBounds(217, 92, 113, 14);
+		lblEdicion.setBounds(217, 81, anchoCampo, 14);
 		frame.getContentPane().add(lblEdicion);
 		
 		txfEdicion = new JTextField();
-		txfEdicion.setBounds(217, 117, 113, 20);
+		txfEdicion.setBounds(217, 95, anchoCampo, 20);
 		frame.getContentPane().add(txfEdicion);
 		txfEdicion.setColumns(10);
 		
 		JLabel lblAnioPublicacion = new JLabel("Año publicación:");
-		lblAnioPublicacion.setBounds(217, 148, 113, 14);
+		lblAnioPublicacion.setBounds(217, 126, anchoCampo, 14);
 		frame.getContentPane().add(lblAnioPublicacion);
 		
 		txfAnioPublicacion = new JTextField();
-		txfAnioPublicacion.setBounds(217, 173, 113, 20);
+		txfAnioPublicacion.setBounds(217, 140, anchoCampo, 20);
 		frame.getContentPane().add(txfAnioPublicacion);
 		txfAnioPublicacion.setColumns(10);
 		
@@ -110,30 +114,48 @@ class NuevoLibroInterfaz {
 		btnCancelar.setBounds(188, 210, 89, 23);
 		frame.getContentPane().add(btnCancelar);
 		
+		lblMensajeDeError = new JLabel("Mensaje de error");
+		lblMensajeDeError.setHorizontalAlignment(SwingConstants.CENTER);
+		lblMensajeDeError.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblMensajeDeError.setForeground(Color.RED);
+		lblMensajeDeError.setBounds(10, 171, 374, 14);
+		lblMensajeDeError.setVisible(false);
+		frame.getContentPane().add(lblMensajeDeError);
+		
 		frame.setVisible(true);
 	}
 	
 	private void agregar() {
 
 		if(campoVacio()) {
-			JOptionPane.showMessageDialog(null, "Complete los campos por favor", "", JOptionPane.ERROR_MESSAGE);
+			lblMensajeDeError.setText("Complete los campos por favor");
+			lblMensajeDeError.setVisible(true);
 		} else {
 			String isbn = txfISBN.getText();
 			String titulo = txfTitulo.getText(); 
 			String autor = txfAutor.getText();
 			String editorial = txfEditorial.getText();
-			Integer edicion = Integer.parseInt(txfEdicion.getText());
-			Integer anioPublicacion = Integer.parseInt(txfAnioPublicacion.getText());
+			String edicion = txfEdicion.getText();
+			String anioPublicacion = txfAnioPublicacion.getText();
 			
-			Libro nuevo = new Libro(isbn, titulo, autor, editorial, edicion, anioPublicacion);
-
-			if(libroService.guardar(nuevo)) {
-				abmInterfaz.buscar();
-				JOptionPane.showMessageDialog(null, "Libro guardado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
-				frame.dispose();
-			} else {
-				JOptionPane.showMessageDialog(null, "No se pudo guardar el libro nuevo", "", JOptionPane.ERROR_MESSAGE);
+			Libro nuevo;
+			try {
+				nuevo = new Libro(isbn, titulo, autor, editorial, edicion, anioPublicacion);
+				
+				if(libroService.guardar(nuevo)) {
+					abmInterfaz.buscar();
+					JOptionPane.showMessageDialog(null, "Libro guardado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
+					frame.dispose();
+				} else {
+					lblMensajeDeError.setText("No se pudo guardar el libro nuevo");
+					lblMensajeDeError.setVisible(true);
+				}
+			} catch (Exception error) {
+				lblMensajeDeError.setText(error.getMessage());
+				lblMensajeDeError.setVisible(true);
 			}
+
+			
 		}
 	}
 	
