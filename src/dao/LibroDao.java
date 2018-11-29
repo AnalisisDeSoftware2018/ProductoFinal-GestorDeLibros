@@ -42,7 +42,7 @@ public class LibroDao {
 	public List<Libro> obtenerLibros() {
 		List<Libro> libros = new ArrayList<>();
 		try {
-			Scanner sc = new Scanner(new File(decodedPath + "\\Libros.txt"));
+			Scanner sc = new Scanner(new File(decodedPath));
 			while (sc.hasNextLine()) {
 				String[] atributos = sc.nextLine().split(SEPARADOR);
 				String isbn = atributos[0];
@@ -79,7 +79,7 @@ public class LibroDao {
 		
 		if(libroValido(libro)) {
 			try {
-				out = new BufferedWriter(new FileWriter(decodedPath + "\\Libros.txt", true));
+				out = new BufferedWriter(new FileWriter(decodedPath, true));
 				out.write(libro.enFormatoRegistro(SEPARADOR));
 				out.close();
 				
@@ -124,8 +124,8 @@ public class LibroDao {
         File fi;
         
         try {
-        	fi = new File(decodedPath + "\\Libros.txt");
-        	fi.mkdirs();
+        	fi = new File(decodedPath);
+        	//fi.mkdirs();
         	fi.createNewFile();
             fw = new FileWriter(fi);
             pw = new PrintWriter(fw);
@@ -147,10 +147,32 @@ public class LibroDao {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
+		createPath(decodedPath);
 		
+		path = path + "\\Libros.txt";
+		try {
+			decodedPath = URLDecoder.decode(path, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		createFile(decodedPath);
+	}
+	
+	private void createPath(String decodedPath) {
 		File fi = new File(decodedPath);
 		if(!fi.exists()) {
 			fi.mkdir();
+		}
+	}
+	
+	private void createFile(String decodedPath) {
+		File fi = new File(decodedPath);
+		if(!fi.exists()) {
+			try {
+				fi.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

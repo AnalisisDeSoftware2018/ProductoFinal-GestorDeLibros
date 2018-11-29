@@ -67,7 +67,7 @@ public class UsuarioDao {
 	private void cargarUsuarios(List<Usuario> usuarios) {
 		Scanner sc;
 		try {
-			sc = new Scanner(new File(decodedPath + "\\Usuarios.txt"));
+			sc = new Scanner(new File(decodedPath));
 			while (sc.hasNextLine()) {
 				String[] atributos = sc.nextLine().split(SEPARADOR);
 				usuarios.add(new Usuario(atributos[0], atributos[1]));
@@ -85,7 +85,7 @@ public class UsuarioDao {
 		
 		if(usuarioValido(userIngresado)) {
 			try {
-				out = new BufferedWriter(new FileWriter(decodedPath + "\\Usuarios.txt", true));
+				out = new BufferedWriter(new FileWriter(decodedPath, true));
 				out.write(userIngresado.obtenerUser() + SEPARADOR + userIngresado.obtenerPass() + '\n');
 				out.close();
 				
@@ -105,10 +105,32 @@ public class UsuarioDao {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
+		createPath(decodedPath);
 		
+		path = path + "\\Usuarios.txt";
+		try {
+			decodedPath = URLDecoder.decode(path, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		createFile(decodedPath);
+	}
+	
+	private void createPath(String decodedPath) {
 		File fi = new File(decodedPath);
 		if(!fi.exists()) {
 			fi.mkdir();
+		}
+	}
+	
+	private void createFile(String decodedPath) {
+		File fi = new File(decodedPath);
+		if(!fi.exists()) {
+			try {
+				fi.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
