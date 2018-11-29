@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import model.Usuario;
+import service.LogService;
 import service.UsuarioService;
 
 import javax.swing.JButton;
@@ -18,14 +19,16 @@ class RegistroInterfaz {
 	private JTextField userField;
 	private JPasswordField passwordField; 
 	private UsuarioService usuarioService;
+	private LogService logService;
 
 	/**
 	 * Create the application.
 	 */
 	RegistroInterfaz() {
 		usuarioService = UsuarioService.getSingletonInstance();
+		logService = LogService.getSingletonInstance();
 		initialize();
-	}
+	} 
 
 	/**
 	 * Initialize the contents of the frame.
@@ -74,8 +77,10 @@ class RegistroInterfaz {
 			Usuario usuario = new Usuario(userField.getText(), new String(passwordField.getPassword()));
 			
 			if(!usuarioService.registrarUsuario(usuario)) {
+				logService.logRegistrarUser(user, false);
 				JOptionPane.showMessageDialog(null, "El usuario ya existe", "", JOptionPane.ERROR_MESSAGE);
 			} else {
+				logService.logRegistrarUser(user, true);
 				JOptionPane.showMessageDialog(null, "Usuario registrado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
 				frame.dispose();
 			}

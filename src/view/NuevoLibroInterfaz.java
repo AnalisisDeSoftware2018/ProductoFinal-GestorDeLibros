@@ -10,6 +10,8 @@ import javax.swing.JTextField;
 
 import model.Libro;
 import service.LibroService;
+import service.LogService;
+
 import java.awt.Color;
 import javax.swing.SwingConstants;
 
@@ -24,10 +26,12 @@ class NuevoLibroInterfaz {
 	private JTextField txfEdicion;
 	private JTextField txfAnioPublicacion;
 	private LibroService libroService;
+	private LogService logService;
 	private ABMInterfaz abmInterfaz;
 
 	NuevoLibroInterfaz(ABMInterfaz abmInterfaz) {
 		libroService = LibroService.obtenerSingletonInstance();
+		logService = LogService.getSingletonInstance();
 		this.abmInterfaz = abmInterfaz;
 		initialize();
 	}
@@ -144,9 +148,11 @@ class NuevoLibroInterfaz {
 				
 				if(libroService.guardar(nuevo)) {
 					abmInterfaz.buscar();
+					logService.logRegistrarLibro(isbn, true);
 					JOptionPane.showMessageDialog(null, "Libro guardado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
 					frame.dispose();
 				} else {
+					logService.logRegistrarLibro(isbn, false);
 					lblMensajeDeError.setText("No se pudo guardar el libro nuevo");
 					lblMensajeDeError.setVisible(true);
 				}

@@ -7,6 +7,7 @@ import javax.swing.JTextField;
 
 import model.Libro;
 import service.LibroService;
+import service.LogService;
 
 import java.awt.Font;
 import javax.swing.JButton;
@@ -27,12 +28,14 @@ class ModificarLibroInterfaz {
 	private String viejoIsbn;
 	private ABMInterfaz abmInterfaz;
 	private LibroService libroService;
+	private LogService logService;
 	
 	ModificarLibroInterfaz(Libro libro, ABMInterfaz abmInterfaz) {
 		this.abmInterfaz = abmInterfaz;
 		this.libro = libro;
 		this.viejoIsbn = libro.obtenerISBN();
 		libroService = LibroService.obtenerSingletonInstance();
+		logService = LogService.getSingletonInstance();
 		initialize();
 	}
 
@@ -168,9 +171,11 @@ class ModificarLibroInterfaz {
 					libroService.eliminar(nuevo.obtenerISBN());
 					if(libroService.guardar(nuevo)) {
 						abmInterfaz.buscar();
+						logService.logModificarLibro(isbn, true);
 						JOptionPane.showMessageDialog(null, "Libro modificado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
 						frame.dispose();
 					} else {
+						logService.logModificarLibro(isbn, false);
 						lblMensajeDeError.setText("No se pudo modificar el libro nuevo");
 						lblMensajeDeError.setVisible(true);
 					}
@@ -178,9 +183,11 @@ class ModificarLibroInterfaz {
 					if(libroService.guardar(nuevo)) {
 						libroService.eliminar(libro.obtenerISBN());
 						abmInterfaz.buscar();
+						logService.logModificarLibro(isbn, true);
 						JOptionPane.showMessageDialog(null, "Libro modificado correctamente", "", JOptionPane.INFORMATION_MESSAGE);
 						frame.dispose();
 					} else {
+						logService.logModificarLibro(isbn, false);
 						lblMensajeDeError.setText("No se pudo modificar el libro nuevo");
 						lblMensajeDeError.setVisible(true);
 					}

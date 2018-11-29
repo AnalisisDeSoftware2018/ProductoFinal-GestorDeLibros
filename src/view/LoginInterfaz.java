@@ -8,11 +8,14 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
 import model.Usuario;
+import service.LogService;
 import service.UsuarioService;
 
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class LoginInterfaz {
 
@@ -20,6 +23,7 @@ public class LoginInterfaz {
 	private JTextField userField;
 	private JPasswordField passwordField;
 	private UsuarioService usuarioService;
+	private LogService logService;
 
 	/**
 	 * Launch the application.
@@ -40,14 +44,23 @@ public class LoginInterfaz {
 	 */
 	private LoginInterfaz() {
 		usuarioService = UsuarioService.getSingletonInstance();
+		logService = LogService.getSingletonInstance();
+		logService.logAbrir();
 		initialize();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
+	 * @wbp.parser.entryPoint
 	 */
 	private void initialize() {
 		frame = new JFrame("Login de usuario");
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				logService.logCerrar();
+			}
+		});
 		frame.setResizable(false);
 		frame.setBounds(100, 100, 453, 187);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -98,9 +111,11 @@ public class LoginInterfaz {
 			Usuario usuario = new Usuario(user, pass);
 
 			if(usuarioService.loginValido(usuario)) {
+				logService.logLoggearUser(user, true);
 				new ABMInterfaz().setVisible(true);
 				frame.dispose();
 			} else {
+				logService.logLoggearUser(user, false);
 				JOptionPane.showMessageDialog(null, "Usuario no valido", "", JOptionPane.ERROR_MESSAGE);
 			}
 		}

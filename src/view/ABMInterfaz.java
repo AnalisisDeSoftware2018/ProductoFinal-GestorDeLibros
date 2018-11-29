@@ -1,5 +1,7 @@
 package view;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -15,6 +17,7 @@ import javax.swing.table.TableModel;
 
 import model.Libro;
 import service.LibroService;
+import service.LogService;
 //import java.awt.event.WindowAdapter;
 //import java.awt.event.WindowEvent;
 
@@ -48,15 +51,17 @@ class ABMInterfaz extends JFrame {
 	private JTable tabla;
 	private TableModel tablaModel;
 	private LibroService libroService;
+	private LogService logService;
 
 	ABMInterfaz() {
-		/*addWindowListener(new WindowAdapter() {
+		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
-				libroService.backup();
+				logService.logCerrar();
 			}
-		});*/
+		});
 		libroService = LibroService.obtenerSingletonInstance();
+		logService = LogService.getSingletonInstance();
 		especificarComponents();
 		especificarListeners();
 	}
@@ -186,9 +191,9 @@ class ABMInterfaz extends JFrame {
 	}
 
 	private void ordenar() {
-
 		tablaModel = new DefaultTableModel(obtenerLibrosToModel(libroService.ordenar()), ROTULOS);
 		tabla.setModel(tablaModel);
+		logService.logOrdenarLibro();
 	}
 
 	private void agregar() {
@@ -197,16 +202,17 @@ class ABMInterfaz extends JFrame {
 
 	private void eliminar() {
 		int libroSeleccionado = tabla.getSelectedRow();
+		String isbn = tabla.getModel().getValueAt(libroSeleccionado, 0).toString();
 
 		if (libroSeleccionado == -1)
 			JOptionPane.showMessageDialog(null, "Debe seleccionar un libro.");
 		else
 			try {
-				String isbn = tabla.getModel().getValueAt(libroSeleccionado, 0).toString();
-
 				tablaModel = new DefaultTableModel(obtenerLibrosToModel(libroService.eliminar(isbn)), ROTULOS);
 				tabla.setModel(tablaModel);
+				logService.logEliminarLibro(isbn, true);
 			} catch (Exception e) {
+				logService.logEliminarLibro(isbn, false);
 				JOptionPane.showMessageDialog(null, "No se pudo eliminar correctamente.");
 			}
 	}
