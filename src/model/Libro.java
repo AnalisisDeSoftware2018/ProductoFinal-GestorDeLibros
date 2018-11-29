@@ -141,18 +141,18 @@ public class Libro implements Comparable<Libro>, Comparator<Libro> {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		
-		if (obj == null) return false;
-		
-		if (getClass() != obj.getClass()) return false;
-		
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
 		Libro other = (Libro) obj;
-		
 		if (isbn == null) {
-			return other.isbn == null;
-		} else if (!isbn.equals(other.isbn)) return false;
-
+			if (other.isbn != null)
+				return false;
+		} else if (!isbn.equals(other.isbn)) 
+			return false;
 		return true;
 	}
 

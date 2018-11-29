@@ -103,10 +103,15 @@ public class LibroDao {
 
     public List<Libro> eliminar(String isbn) {
 		List<Libro> libros = obtenerLibros();
+		int i = 0;
+		for (Libro libro : libros) {
+			if(libro.obtenerISBN().equals(isbn)) break;
+			i++;
+        }
 		try {
-			libros.remove(new Libro(isbn,null,null,null,null,null));
+			libros.remove(i);
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
+			JOptionPane.showMessageDialog(null, "Libro no encontrado");
 		}
         escribirArchivo(libros);
         
@@ -126,12 +131,14 @@ public class LibroDao {
         try {
         	fi = new File(decodedPath);
         	//fi.mkdirs();
+        	fi.delete();
         	fi.createNewFile();
             fw = new FileWriter(fi);
             pw = new PrintWriter(fw);
             
-            for (Libro libro : libros)
+            for (Libro libro : libros) {
             	pw.print(libro.enFormatoRegistro(SEPARADOR));
+            }
             
             fw.close();
             pw.close();

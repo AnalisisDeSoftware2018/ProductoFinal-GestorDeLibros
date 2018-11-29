@@ -15,8 +15,8 @@ import javax.swing.table.TableModel;
 
 import model.Libro;
 import service.LibroService;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+//import java.awt.event.WindowAdapter;
+//import java.awt.event.WindowEvent;
 
 class ABMInterfaz extends JFrame {
 
@@ -26,7 +26,7 @@ class ABMInterfaz extends JFrame {
 	private static final int AUTOR = 2;
 	private static final int EDITORIAL = 3;
 	private static final int EDICION = 4;
-	private static final int ANIO_PUBLICACION = 5;
+	private static final int ANIO_PUBLICACION = 5; 
 	private static final int COLUMNAS = 6;
 	private static final String[] ROTULOS = { "ISBN", "Titulo", "Autor", "Editorial", "Edicion", "Año publicacion" };
 
@@ -50,12 +50,12 @@ class ABMInterfaz extends JFrame {
 	private LibroService libroService;
 
 	ABMInterfaz() {
-		addWindowListener(new WindowAdapter() {
+		/*addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
 				libroService.backup();
 			}
-		});
+		});*/
 		libroService = LibroService.obtenerSingletonInstance();
 		especificarComponents();
 		especificarListeners();
@@ -74,6 +74,7 @@ class ABMInterfaz extends JFrame {
 		tablaModel = new DefaultTableModel(null, ROTULOS);
 		tabla = new JTable(tablaModel);
 		tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tabla.setDefaultEditor(Object.class, null);
 		scrollPane.setViewportView(tabla);
 
 		JLabel lblIsbn = new JLabel("ISBN");
