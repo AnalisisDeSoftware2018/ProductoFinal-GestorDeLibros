@@ -148,7 +148,7 @@ public class LibroDao {
     }
     
 	private void getPath() {
-		path = new JFileChooser().getFileSystemView().getDefaultDirectory().toString() + "\\Gestor de Libros";
+		path = new JFileChooser().getFileSystemView().getDefaultDirectory().toString() + "/Gestor de Libros";
 		try {
 			decodedPath = URLDecoder.decode(path, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
@@ -156,7 +156,7 @@ public class LibroDao {
 		}
 		createPath(decodedPath);
 		
-		path = path + "\\Libros.txt";
+		path = path + "/Libros.txt";
 		try {
 			decodedPath = URLDecoder.decode(path, "UTF-8");
 		} catch (UnsupportedEncodingException e) {

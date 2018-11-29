@@ -99,7 +99,7 @@ public class UsuarioDao {
 	}
 	
 	private void getPath() {
-		path = new JFileChooser().getFileSystemView().getDefaultDirectory().toString() + "\\Gestor de Libros";
+		path = new JFileChooser().getFileSystemView().getDefaultDirectory().toString() + "/Gestor de Libros";
 		try {
 			decodedPath = URLDecoder.decode(path, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
@@ -107,7 +107,7 @@ public class UsuarioDao {
 		}
 		createPath(decodedPath);
 		
-		path = path + "\\Usuarios.txt";
+		path = path + "/Usuarios.txt";
 		try {
 			decodedPath = URLDecoder.decode(path, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
