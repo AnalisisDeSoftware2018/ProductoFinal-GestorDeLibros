@@ -1,10 +1,13 @@
 package dao;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -21,7 +24,9 @@ public class UsuarioDao {
 	private static UsuarioDao instancia;
 	private final static String SEPARADOR = "&&";
 	private String path;
+	private String pathBackup;
 	private String decodedPath;
+	private String decodedPathBackup;
 
 	private UsuarioDao() {
 		getPath();
@@ -82,12 +87,17 @@ public class UsuarioDao {
 		
 		Usuario userIngresado = new Usuario(user.obtenerUser(), BCrypt.hashpw(user.obtenerPass(), BCrypt.gensalt(4)));
 		BufferedWriter out; 
+		BufferedWriter outBackup; 
 		
 		if(usuarioValido(userIngresado)) {
 			try {
 				out = new BufferedWriter(new FileWriter(decodedPath, true));
 				out.write(userIngresado.obtenerUser() + SEPARADOR + userIngresado.obtenerPass() + '\n');
 				out.close();
+				
+				outBackup = new BufferedWriter(new FileWriter(decodedPathBackup, true));
+				outBackup.write(userIngresado.obtenerUser() + SEPARADOR + userIngresado.obtenerPass() + '\n');
+				outBackup.close();
 				
 				return true;
 			} catch (IOException e) {
@@ -100,20 +110,25 @@ public class UsuarioDao {
 	
 	private void getPath() {
 		path = new JFileChooser().getFileSystemView().getDefaultDirectory().toString() + "/Gestor de Libros";
+		pathBackup = new JFileChooser().getFileSystemView().getDefaultDirectory().toString() + "/Gestor de Libros backup";
 		try {
 			decodedPath = URLDecoder.decode(path, "UTF-8");
+			decodedPathBackup = URLDecoder.decode(pathBackup, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 		createPath(decodedPath);
+		createPath(decodedPathBackup);
 		
 		path = path + "/Usuarios.txt";
+		pathBackup = pathBackup + "/Usuarios.txt";
 		try {
 			decodedPath = URLDecoder.decode(path, "UTF-8");
+			decodedPathBackup = URLDecoder.decode(pathBackup, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		createFile(decodedPath);
+		createFile(decodedPath, decodedPathBackup);
 	}
 	
 	private void createPath(String decodedPath) {
@@ -123,13 +138,36 @@ public class UsuarioDao {
 		}
 	}
 	
-	private void createFile(String decodedPath) {
+	private void createFile(String decodedPath, String decodedPathBackup) {
 		File fi = new File(decodedPath);
+		File fiBackup = new File(decodedPathBackup);
+		
 		if(!fi.exists()) {
-			try {
-				fi.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
+			if(fiBackup.exists()) {
+				BufferedReader br;
+				PrintWriter pw;
+				String cad;
+				
+				try {
+					br = new BufferedReader(new FileReader(fiBackup));
+					pw = new PrintWriter(new FileWriter(fi));
+					
+					while((cad = br.readLine()) != null) {
+						pw.print(cad);
+					}
+					
+					br.close();
+					pw.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else {
+				try {
+					fi.createNewFile();
+					fiBackup.createNewFile();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

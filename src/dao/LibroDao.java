@@ -1,7 +1,9 @@
 package dao;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -20,7 +22,9 @@ public class LibroDao {
 	private static LibroDao instancia;
 	private final static String SEPARADOR = "&&";
 	private String path;
+	private String pathBackup;
 	private String decodedPath;
+	private String decodedPathBackup;
 
 	private LibroDao() {
 		getPath();
@@ -76,12 +80,17 @@ public class LibroDao {
 	
 	public boolean guardar(Libro libro) {
 		BufferedWriter out;
+		BufferedWriter outBackup;
 		
 		if(libroValido(libro)) {
 			try {
 				out = new BufferedWriter(new FileWriter(decodedPath, true));
 				out.write(libro.enFormatoRegistro(SEPARADOR));
 				out.close();
+				
+				outBackup = new BufferedWriter(new FileWriter(decodedPathBackup, true));
+				outBackup.write(libro.enFormatoRegistro(SEPARADOR));
+				outBackup.close();
 				
 				return true;
 			} catch (IOException e) {
@@ -117,31 +126,34 @@ public class LibroDao {
         
 		return libros;
     }
-
-    public void backup() {
-    	List<Libro> libros = obtenerLibros();
-    	escribirArchivo(libros);
-    }
     
     private void escribirArchivo(List<Libro> libros) {
-        FileWriter fw;
-        PrintWriter pw;
-        File fi;
+        FileWriter fw, fwBackup;
+        PrintWriter pw, pwBackup;
+        File fi, fiBackup;
         
         try {
         	fi = new File(decodedPath);
-        	//fi.mkdirs();
         	fi.delete();
         	fi.createNewFile();
             fw = new FileWriter(fi);
             pw = new PrintWriter(fw);
             
+            fiBackup = new File(decodedPathBackup);
+        	fiBackup.delete();
+        	fiBackup.createNewFile();
+            fwBackup = new FileWriter(fiBackup);
+            pwBackup = new PrintWriter(fwBackup);
+            
             for (Libro libro : libros) {
             	pw.print(libro.enFormatoRegistro(SEPARADOR));
+            	pwBackup.print(libro.enFormatoRegistro(SEPARADOR));
             }
             
             fw.close();
             pw.close();
+            fwBackup.close();
+            pwBackup.close();
         } catch (IOException evento) {
             JOptionPane.showMessageDialog(null, evento.getMessage());
         }
@@ -149,20 +161,25 @@ public class LibroDao {
     
 	private void getPath() {
 		path = new JFileChooser().getFileSystemView().getDefaultDirectory().toString() + "/Gestor de Libros";
+		pathBackup = new JFileChooser().getFileSystemView().getDefaultDirectory().toString() + "/Gestor de Libros backup";
 		try {
 			decodedPath = URLDecoder.decode(path, "UTF-8");
+			decodedPathBackup = URLDecoder.decode(pathBackup, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 		createPath(decodedPath);
+		createPath(decodedPathBackup);
 		
 		path = path + "/Libros.txt";
+		pathBackup = pathBackup + "/Libros.txt";
 		try {
 			decodedPath = URLDecoder.decode(path, "UTF-8");
+			decodedPathBackup = URLDecoder.decode(pathBackup, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		createFile(decodedPath);
+		createFile(decodedPath, decodedPathBackup);
 	}
 	
 	private void createPath(String decodedPath) {
@@ -172,13 +189,36 @@ public class LibroDao {
 		}
 	}
 	
-	private void createFile(String decodedPath) {
+	private void createFile(String decodedPath, String decodedPathBackup) {
 		File fi = new File(decodedPath);
+		File fiBackup = new File(decodedPathBackup);
+		
 		if(!fi.exists()) {
-			try {
-				fi.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
+			if(fiBackup.exists()) {
+				BufferedReader br;
+				PrintWriter pw;
+				String cad;
+				
+				try {
+					br = new BufferedReader(new FileReader(fiBackup));
+					pw = new PrintWriter(new FileWriter(fi));
+					
+					while((cad = br.readLine()) != null) {
+						pw.print(cad);
+					}
+					
+					br.close();
+					pw.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else {
+				try {
+					fi.createNewFile();
+					fiBackup.createNewFile();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

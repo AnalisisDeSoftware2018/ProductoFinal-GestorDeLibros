@@ -66,6 +66,7 @@ public class LogDao {
 	
 	public void logCerrar() {
 		log(getDate() + " - Gestor de Libros cerrado");
+		liberarRecursos();
 	}
 	
 	private String getDate() {
@@ -115,6 +116,14 @@ public class LogDao {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	public void liberarRecursos() {
+		try {
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }
