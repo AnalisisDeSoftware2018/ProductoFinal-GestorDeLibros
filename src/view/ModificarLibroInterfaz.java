@@ -153,7 +153,8 @@ class ModificarLibroInterfaz {
 	private void modificar() {
 
 		if(campoVacio()) {
-			JOptionPane.showMessageDialog(null, "Complete los campos por favor", "", JOptionPane.ERROR_MESSAGE);
+			lblMensajeDeError.setText("Complete los campos por favor");
+			lblMensajeDeError.setVisible(true);
 		} else {
 			String isbn = txfISBN.getText();
 			String titulo = txfTitulo.getText(); 
