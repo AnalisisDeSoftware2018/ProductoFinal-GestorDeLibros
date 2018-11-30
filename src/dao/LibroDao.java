@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import java.util.Base64;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import model.Libro;
@@ -48,7 +49,8 @@ public class LibroDao {
 		try {
 			Scanner sc = new Scanner(new File(decodedPath));
 			while (sc.hasNextLine()) {
-				String[] atributos = sc.nextLine().split(SEPARADOR);
+				String cad = (decrypt(sc.nextLine())).replace("\n", "").replace("\r", "");
+				String[] atributos = cad.split(SEPARADOR);
 				String isbn = atributos[0];
 				String titulo = atributos[1];
 				String autor = atributos[2];
@@ -85,11 +87,13 @@ public class LibroDao {
 		if(libroValido(libro)) {
 			try {
 				out = new BufferedWriter(new FileWriter(decodedPath, true));
-				out.write(libro.enFormatoRegistro(SEPARADOR));
+				out.write(encrypt(libro.enFormatoRegistro(SEPARADOR)));
+				out.newLine();
 				out.close();
 				
 				outBackup = new BufferedWriter(new FileWriter(decodedPathBackup, true));
-				outBackup.write(libro.enFormatoRegistro(SEPARADOR));
+				outBackup.write(encrypt(libro.enFormatoRegistro(SEPARADOR)));
+				outBackup.newLine();
 				outBackup.close();
 				
 				return true;
@@ -146,8 +150,8 @@ public class LibroDao {
             pwBackup = new PrintWriter(fwBackup);
             
             for (Libro libro : libros) {
-            	pw.print(libro.enFormatoRegistro(SEPARADOR));
-            	pwBackup.print(libro.enFormatoRegistro(SEPARADOR));
+            	pw.println(encrypt(libro.enFormatoRegistro(SEPARADOR)));
+            	pwBackup.println(encrypt(libro.enFormatoRegistro(SEPARADOR)));
             }
             
             fw.close();
@@ -221,6 +225,30 @@ public class LibroDao {
 				}
 			}
 		}
+	}
+	
+	private String encrypt(String strNoEncriptada) {
+		byte[] encodedBytes = null;
+		
+		try {
+			encodedBytes = Base64.getEncoder().encode(strNoEncriptada.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} 
+		
+		return new String(encodedBytes);
+	}
+	
+	private String decrypt(String strEncriptada) {
+		byte[] decodedBytes = null;
+		
+		try {
+			decodedBytes = Base64.getDecoder().decode(strEncriptada.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} 
+		
+		return new String(decodedBytes);
 	}
 
 }
