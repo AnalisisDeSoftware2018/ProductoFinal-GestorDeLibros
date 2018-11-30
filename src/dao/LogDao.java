@@ -37,79 +37,49 @@ public class LogDao {
 	}
 	
 	public void logAbrir() {
-		try {
-			out.write(getDate() + " - Gestor de Libros abierto\n");
-			out.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		log(getDate() + " - Gestor de Libros abierto");
 	}
 	
 	public void logLoggearUser(String user, boolean correcto) {
-		try {
-			out.write(getDate() + " - Login " + ((correcto) ? "correcto " : "incorrecto ") + "del usuario " + user + "\n");
-			out.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		log(getDate() + " - Login " + ((correcto) ? "correcto " : "incorrecto ") + "del usuario " + user);
 	}
 	
 	public void logRegistrarUser(String user, boolean correcto) {
-		try {
-			out.write(getDate() + " - Registro " + ((correcto) ? "correcto " : "incorrecto ") + "del usuario " + user + "\n");
-			out.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		log(getDate() + " - Registro " + ((correcto) ? "correcto " : "incorrecto ") + "del usuario " + user);
 	}
 	
 	public void logRegistrarLibro(String isbn, boolean correcto) {
-		try {
-			out.write(getDate() + " - Registro " + ((correcto) ? "correcto " : "incorrecto ") + "del libro con ISBN " + isbn + "\n");
-			out.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		log(getDate() + " - Registro " + ((correcto) ? "correcto " : "incorrecto ") + "del libro con ISBN " + isbn);
 	}
 
 	public void logModificarLibro(String isbn, boolean correcto) {
-		try {
-			out.write(getDate() + " - Modificacion " + ((correcto) ? "correcta " : "incorrecta ") + "del libro con ISBN " + isbn + "\n");
-			out.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		log(getDate() + " - Modificacion " + ((correcto) ? "correcta " : "incorrecta ") + "del libro con ISBN " + isbn);
 	}
 	
 	public void logEliminarLibro(String isbn, boolean correcto) {
-		try {
-			out.write(getDate() + " - Eliminacion " + ((correcto) ? "correcta " : "incorrecta ") + "del libro con ISBN " + isbn + "\n");
-			out.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		log(getDate() + " - Eliminacion " + ((correcto) ? "correcta " : "incorrecta ") + "del libro con ISBN " + isbn);
 	}
 	
 	public void logOrdenarLibro() {
-		try {
-			out.write(getDate() + " - Lista de libros ordenada\n");
-			out.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		log(getDate() + " - Lista de libros ordenada");
 	}
 	
 	public void logCerrar() {
-		try {
-			out.write(getDate() + " - Gestor de Libros cerrado\n");
-			out.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		log(getDate() + " - Gestor de Libros cerrado");
 	}
 	
 	private String getDate() {
 		return dateFormat.format(date);
+	}
+	
+	private void log(String texto) {
+		try {
+			out.write(getDate() + " - " + texto);
+			out.newLine();
+			out.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void getPath() {
