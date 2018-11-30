@@ -1,30 +1,31 @@
 package view;
 
-import javax.swing.JFrame;
+import java.awt.Frame;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import model.Usuario;
 import service.LogService;
 import service.UsuarioService;
 
-import javax.swing.JButton;
-
-import javax.swing.JPasswordField;
-
 class RegistroInterfaz {
 
-	private JFrame frame;
+	private JDialog frame;
 	private JTextField userField;
 	private JPasswordField passwordField; 
 	private UsuarioService usuarioService;
 	private LogService logService;
-
+	private Frame framePadre;
 	/**
 	 * Create the application.
 	 */
-	RegistroInterfaz() {
+	RegistroInterfaz(Frame frame) {
+		framePadre = frame;
 		usuarioService = UsuarioService.getSingletonInstance();
 		logService = LogService.getSingletonInstance();
 		initialize();
@@ -34,28 +35,27 @@ class RegistroInterfaz {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame("Registro de usuario");
+		frame = new JDialog(framePadre,"Registro de usuario",true);
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 266, 164);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setBounds(100, 100, 243, 164);
+		frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		JLabel lblUsuario = new JLabel("Usuario:");
 		lblUsuario.setBounds(10, 23, 82, 20);
 		frame.getContentPane().add(lblUsuario);
 		
 		JLabel lblPass = new JLabel("Contraseña:");
-		lblPass.setBounds(10, 58, 82, 20);
+		lblPass.setBounds(10, 58, 94, 20);
 		frame.getContentPane().add(lblPass);
 		
 		userField = new JTextField();
-		userField.setBounds(102, 23, 113, 20);
+		userField.setBounds(104, 24, 113, 20);
 		frame.getContentPane().add(userField);
 		userField.setColumns(10);
 		
 		passwordField = new JPasswordField();
-		passwordField.setBounds(102, 58, 113, 20);
+		passwordField.setBounds(104, 59, 113, 20);
 		frame.getContentPane().add(passwordField);
 		
 		JButton btnConfirmar = new JButton("Confirmar");

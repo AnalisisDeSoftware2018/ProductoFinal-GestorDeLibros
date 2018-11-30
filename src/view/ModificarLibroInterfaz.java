@@ -1,22 +1,22 @@
 package view;
 
-import javax.swing.JFrame;
+import java.awt.Color;
+import java.awt.Font;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import model.Libro;
 import service.LibroService;
 import service.LogService;
 
-import java.awt.Font;
-import javax.swing.JButton;
-import javax.swing.SwingConstants;
-import java.awt.Color;
-
 class ModificarLibroInterfaz {
 
-	private JFrame frame;
+	private JDialog frame;
 	private JLabel lblMensajeDeError;
 	private JTextField txfISBN;
 	private JTextField txfTitulo;
@@ -41,16 +41,15 @@ class ModificarLibroInterfaz {
 
 	private void initialize() {
 		int anchoCampo = 150;
-		frame = new JFrame("Modificar libro");
+		frame = new JDialog(abmInterfaz,"Modificar libro",true);
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 400, 282);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setBounds(100, 100, 381, 282);
+		frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		JLabel lblCompleteLosCampos = new JLabel("Modifique los campos necesarios:");
 		lblCompleteLosCampos.setFont(lblCompleteLosCampos.getFont().deriveFont(lblCompleteLosCampos.getFont().getStyle() | Font.BOLD));
-		lblCompleteLosCampos.setBounds(10, 11, 209, 14);
+		lblCompleteLosCampos.setBounds(10, 11, 250, 14);
 		frame.getContentPane().add(lblCompleteLosCampos);
 		
 		txfISBN = new JTextField();
@@ -121,7 +120,7 @@ class ModificarLibroInterfaz {
 		
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(arg0 -> frame.dispose());
-		btnCancelar.setBounds(217, 196, 89, 23);
+		btnCancelar.setBounds(217, 196, 96, 23);
 		frame.getContentPane().add(btnCancelar);
 		
 		lblMensajeDeError = new JLabel("Mensaje de error");

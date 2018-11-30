@@ -1,23 +1,22 @@
 package view;
 
+import java.awt.Color;
 import java.awt.Font;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import model.Libro;
 import service.LibroService;
 import service.LogService;
 
-import java.awt.Color;
-import javax.swing.SwingConstants;
-
 class NuevoLibroInterfaz {
 
-	private JFrame frame;
+	private JDialog frame;
 	private JLabel lblMensajeDeError;
 	private JTextField txfISBN;
 	private JTextField txfTitulo;
@@ -41,12 +40,11 @@ class NuevoLibroInterfaz {
 	 */
 	private void initialize() {
 		int anchoCampo = 150;
-		frame = new JFrame("Registrar nuevo libro");
+		frame = new JDialog(abmInterfaz,"Registrar nuevo libro",true);
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 400, 282);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setBounds(100, 100, 377, 282);
+		frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		JLabel lblCompleteLosCampos = new JLabel("Complete los campos:");
 		lblCompleteLosCampos.setFont(lblCompleteLosCampos.getFont().deriveFont(lblCompleteLosCampos.getFont().getStyle() | Font.BOLD));
@@ -110,19 +108,19 @@ class NuevoLibroInterfaz {
 		
 		JButton btnAceptar = new JButton("Aceptar");
 		btnAceptar.addActionListener(e -> agregar());
-		btnAceptar.setBounds(65, 210, 89, 23);
+		btnAceptar.setBounds(65, 210, 96, 23);
 		frame.getContentPane().add(btnAceptar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(e -> frame.dispose());
-		btnCancelar.setBounds(188, 210, 89, 23);
+		btnCancelar.setBounds(188, 210, 96, 23);
 		frame.getContentPane().add(btnCancelar);
 		
 		lblMensajeDeError = new JLabel("Mensaje de error");
 		lblMensajeDeError.setHorizontalAlignment(SwingConstants.CENTER);
 		lblMensajeDeError.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblMensajeDeError.setForeground(Color.RED);
-		lblMensajeDeError.setBounds(10, 171, 374, 14);
+		lblMensajeDeError.setBounds(10, 171, 357, 14);
 		lblMensajeDeError.setVisible(false);
 		frame.getContentPane().add(lblMensajeDeError);
 		

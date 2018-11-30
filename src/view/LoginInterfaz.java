@@ -1,21 +1,20 @@
 package view;
 
 import java.awt.EventQueue;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import model.Usuario;
 import service.LogService;
 import service.UsuarioService;
-
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.JPasswordField;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 public class LoginInterfaz {
 
@@ -83,16 +82,16 @@ public class LoginInterfaz {
 		
 		JButton btnAceptar = new JButton("Aceptar");
 		btnAceptar.addActionListener(e -> logearse());
-		btnAceptar.setBounds(309, 29, 89, 23);
+		btnAceptar.setBounds(309, 29, 96, 23);
 		frame.getContentPane().add(btnAceptar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(arg0 -> frame.dispose());
-		btnCancelar.setBounds(309, 60, 89, 23); 
+		btnCancelar.setBounds(309, 60, 96, 23); 
 		frame.getContentPane().add(btnCancelar);
 		
 		JButton btnRegistro = new JButton("Registrarse");
-		btnRegistro.addActionListener(e -> new RegistroInterfaz());
+		btnRegistro.addActionListener(e -> new RegistroInterfaz(frame));
 		btnRegistro.setBounds(272, 115, 126, 23);
 		frame.getContentPane().add(btnRegistro);
 		
